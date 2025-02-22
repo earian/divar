@@ -1,10 +1,11 @@
-import Header from "./ui/topNav";
 import CategoryItem from "./ui/category/categoryItem";
+import PostThumbnail from "./ui/posts/postThumbnail";
+import Header from "./ui/topNav";
 
 export default function Home() {
   return (
     <>
-    <Header />
+      <Header />
       <div className="grid grid-cols-4 gap-[0.875rem] p-[1.230rem]">
         <CategoryItem imageUrl='/categoryIcons/real-estate.png' title='املاک'/>
         <CategoryItem imageUrl='/categoryIcons/vehicles.png' title='وسایل نقلیه'/>
@@ -17,6 +18,9 @@ export default function Home() {
         <CategoryItem imageUrl='/categoryIcons/tools-materials-equipment.png' title='تجهیزات و صنعتی'/>
         <CategoryItem imageUrl='/categoryIcons/jobs.png' title='استخدام و کاریابی'/>
       </div>
+      <h3 className="text-[inherit]">انواع آگهی‌ها و نیازمندی‌های تهران</h3>
+      <PostThumbnail title="فروش ۱۳۰ متر آپارتمان" price={85000000000} location="سهروردی"/>
+      <PostThumbnail title="فروش دلار کلکسیونی" price={93000} location="حسین آباد"/>
     </>
   );
 }
