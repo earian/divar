@@ -1,0 +1,15 @@
+:root{
+    --border-radius-val: 5px;
+}
+
+.main{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+.verticalSeperatorLine {
+    width: 0.5px;
+    height: 35px;
+    background-color: rgba(153, 153, 153, 0.898);
+}
