@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Header from "./ui/topNav";
 import CategoryItem from "./ui/category/categoryItem";
 
