@@ -7,13 +7,21 @@ export default function BottomNav(){
         <div className="fixed left-[0] bottom-[0] w-full h-[3rem] flex flex-direction-row justify-around bg-[#333]">
             <Link
             href={'/'}
-            className="flex place-content-center"
+            className="flex items-center justify-center"
             >
             <BottomNavItem title='آگهی‌ها' />
             </Link>
+            
             <BottomNavItem icon={BookmarkIcon} title='نشان‌ها' />
+            
+            <Link 
+            href={'/create'}
+            >
             <BottomNavItem icon={PlusCircleIcon} title='ثبت آگهی' />
+            </Link>
+            
             <BottomNavItem icon={ChatBubbleLeftRightIcon} title='چت' />
+            
             <Link
             href={'/user'}
             >

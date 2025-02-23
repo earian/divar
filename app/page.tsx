@@ -18,7 +18,7 @@ export default function Home() {
         <CategoryItem imageUrl='/categoryIcons/tools-materials-equipment.png' title='تجهیزات و صنعتی'/>
         <CategoryItem imageUrl='/categoryIcons/jobs.png' title='استخدام و کاریابی'/>
       </div>
-      <h3 className="text-[inherit]">انواع آگهی‌ها و نیازمندی‌های تهران</h3>
+      <h3 className="m-[1rem]">انواع آگهی‌ها و نیازمندی‌های تهران</h3>
       <PostThumbnail title="فروش ۱۳۰ متر آپارتمان" price={85000000000} location="سهروردی"/>
       <PostThumbnail title="فروش دلار کلکسیونی" price={93000} location="حسین آباد"/>
     </>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { rubik } from "../fonts";
 
-export default function PostThumbnail(props: {
+export default async function PostThumbnail(props: {
     title: string;
     price: number;
     location: string;

@@ -1,8 +1,10 @@
 import { rubik } from "../ui/fonts";
 import { ArrowLeftEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { Suspense } from "react";
+import User from "../ui/userTemplate";
 
-export default function Login(){
+export default function Page(){
     return (
         <div>
             <h2 className={`${rubik.className} block top-[0] sticky w-full bg-[#333] p-[1rem] font-[700]`}>دیوار من</h2>
@@ -17,6 +19,9 @@ export default function Login(){
                 </div>
                 </Link>
             </div>
+            <Suspense fallback={<div>در حال پردازش...</div>}>
+                <User />
+            </Suspense>
         </div>
     )
 }

@@ -5,7 +5,7 @@ export default function BottomNavItem(props: {
     title: string;
 }){
     return (
-        <div className="flex flex-col place-content-center">
+        <div className="flex flex-col items-center justify-center">
             {props.icon && <props.icon className="size-6 w-full"/>}
             <p className={`${rubik.className} font-[700] text-[.775rem]`}>{props.title}</p>
         </div>
