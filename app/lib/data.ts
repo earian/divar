@@ -13,9 +13,9 @@ export async function fetchUser(email: string){
 
 export async function fetchLatestPosts(){
     try{
-        const posts = await sql`SELECT title price location imageUrl 
+        const posts = await sql`SELECT title, price, location, images 
                                 FROM posts
-                                ORDER BY posts.date DESC
+                                ORDER BY date DESC
                                 LIMIT 5`
         console.log(posts)
         return posts;

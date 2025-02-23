@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function BottomNav(){
     return (
-        <div className="fixed left-[0] bottom-[0] w-full h-[3rem] flex flex-direction-row justify-around bg-[#333]">
+        <div className="fixed left-[0] bottom-[0] w-full h-[3rem] flex flex-direction-row justify-around bg-[#333] min-h-[0]">
             <Link
             href={'/'}
             className="flex items-center justify-center"

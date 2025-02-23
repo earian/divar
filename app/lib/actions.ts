@@ -23,7 +23,7 @@ export async function authenticate(state: FormState, formData: FormData){
         if(passwordMatch) {
             const cookieStore = cookies();
             (await cookieStore).set("login","true", {
-                httpOnly: true,
+                httpOnly: false,
                 secure: true,
                 path: '/',
                 maxAge: 60 * 60 * 24 * 7,
