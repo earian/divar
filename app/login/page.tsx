@@ -22,10 +22,10 @@ export default function LoginPage(){
                 رمز عبور
             </label>
             <input type="password" name="password" dir="ltr" className="bg-[#333] p-[0.350rem] float-left w-full h-[2.575rem]"/>
-            {state?.errors?.password && 
+            {state?.errors?.password || state?.message && 
             <div>
-                <p className="text-[red]">{state.errors.password}</p>
-                <p>{state.message}</p>
+                {state?.errors && <p className="text-[red]">{state.errors.password}</p>}
+                {state?.message && <p>{state.message}</p>}
             </div>
             }
             <button type="submit" className="m-[1rem] border-[2px] border-[#333] p-[0.875rem]" disabled={pending ? true : false}>{pending ? 'در حال بررسی...' : 'ورود به حساب کاربری'}</button>

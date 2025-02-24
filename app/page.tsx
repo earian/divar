@@ -1,5 +1,5 @@
 import CategoryItem from "./ui/category/categoryItem";
-import PostThumbnail from "./ui/posts/postThumbnail";
+import Posts from "./ui/posts/posts";
 import Header from "./ui/topNav";
 
 export default function Home() {
@@ -19,8 +19,7 @@ export default function Home() {
         <CategoryItem imageUrl='/categoryIcons/jobs.png' title='استخدام و کاریابی'/>
       </div>
       <h3 className="m-[1rem]">انواع آگهی‌ها و نیازمندی‌های تهران</h3>
-      <PostThumbnail title="فروش ۱۳۰ متر آپارتمان" price={85000000000} location="سهروردی"/>
-      <PostThumbnail title="فروش دلار کلکسیونی" price={93000} location="حسین آباد"/>
+      <Posts />
     </>
   );
 }

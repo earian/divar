@@ -18,7 +18,7 @@ export async function authenticate(state: FormState, formData: FormData){
         }
         const {email, password} = validatedFields.data;
         const user = await fetchUser(email);
-        if(!user.rows) return { message: `چنین کاربری وجود ندارد.` }
+        if(user.rows.length == 0) return { message: `چنین کاربری وجود ندارد.` }
         const passwordMatch = (password === user.rows[0].password);
         if(passwordMatch) {
             const cookieStore = cookies();
