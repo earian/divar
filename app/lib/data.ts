@@ -17,10 +17,22 @@ export async function fetchLatestPosts(){
                                 FROM posts
                                 ORDER BY date DESC
                                 LIMIT 5`
-                                
+
         return posts;
     }catch(err){
         console.log(err);
         throw new Error(`Coudn't fetch the data right now.`)
+    }
+}
+
+export async function fetchCategories(){
+    try{
+        const categories = await sql`SELECT name, value FROM categories`
+
+        console.log(categories)
+        return categories.rows;
+    }catch(err){
+        console.log('failed to fetch categories')
+        throw new Error('Failed to fetch categories.')
     }
 }
