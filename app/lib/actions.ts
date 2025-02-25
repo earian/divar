@@ -1,5 +1,5 @@
 'use server'
-import { CreatePostFormSchema, FormState, LoginFormSchema } from "./definitions";
+import { CreateFormState, CreatePostFormSchema, FormState, LoginFormSchema } from "./definitions";
 import { fetchUser } from "./data";
 import { redirect } from "next/navigation";
 import { cookies, headers } from "next/headers";
@@ -35,34 +35,28 @@ export async function authenticate(state: FormState, formData: FormData){
 }
 
 
-export async function createPost(prevState: FormState, formData: FormData){
-    // const validatedFields = CreatePostFormSchema.safeParse({
-    //     category: formData.get('category'),
-    //     title: formData.get('title'),
-    //     desc: formData.get('desc'),
-    //     image: formData.get('image'),
-    //     price: formData.get('price'),
-    //     district: formData.get('district'),
-    // })
+export async function createPost(prevState: CreateFormState, formData: FormData){
+    const validatedFields = CreatePostFormSchema.safeParse({
+        category: formData.get('category'),
+        title: formData.get('title'),
+        desc: formData.get('desc'),
+        image: formData.get('image'),
+        price: formData.get('price'),
+        district: formData.get('district'),
+    })
     
-    // if(!validatedFields.success){
-    //     return {
-    //         //errors: validatedFields.error.flatten().fieldErrors,
-    //     }
-    // }
-    // const {category, title, desc, price, district} = validatedFields.data;
-    // const date = new Date().toISOString().split('T')[0];
-    // const id = uuidv4();
-    // try{
-    //     await sql`
-    //             INSERT INTO posts ("postId", title, description, price, category, date, district)
-    //             VALUES (${id}, ${title}, ${desc}, ${price}, ${category}, ${date}, ${district})
-    //             `
-    // }catch(err){
-    //     console.log(err)
-    //     throw new Error("Coudn't create the post.")
-    // }
+    if(!validatedFields.success){
+        const fieldErrors = validatedFields.error.flatten().fieldErrors;
+        return {
+            errors: fieldErrors,
+        }
+    }
+    
+    const {category, title, desc, price, district} = validatedFields.data;
     const imageFile : any = formData.get('image');
+    let imageUrl;
+    const date = new Date().toISOString().split('T')[0];
+    const id = uuidv4();
     const host = (await headers()).get("host");
     const data = new FormData();
     data.set('file', imageFile);
@@ -71,12 +65,18 @@ export async function createPost(prevState: FormState, formData: FormData){
             method: 'POST',
             body: data,
         })
-        if(!res.ok) throw new Error("server Error")
+        if(!res.ok) throw new Error("server Error");
+        imageUrl = `/poster/${imageFile.name}`;
+        console.log(imageUrl);
+        await sql`
+                INSERT INTO posts ("postId", title, description, price, category, date, district, thumbnail)
+                VALUES (${id}, ${title}, ${desc}, ${price}, ${category}, ${date}, ${district}, ${imageUrl})
+                `
     }catch(err){
-        console.log(err);
-        throw new Error("coudn't upload the file.")
+        console.log(err)
+        throw new Error("Coudn't create the post.")
     }
 
-    return { };
+    return undefined;
 
 }

@@ -16,10 +16,20 @@ export type FormState = {
 } | undefined;
 
 export const CreatePostFormSchema = z.object({
-    category: z.string(),
-    title: z.string(),
+    category: z.string({ message: 'لطفا دسته بندی خود را انتخاب کنید.' }),
+    title: z.string({ message: 'لطفا عنوان آگهی خود را وارد کنید.'}),
     desc: z.string(),
-    image: z.instanceof(File),
+    image: z.instanceof(File,{ message: 'فایل انتخابی باید از نوع png/jpeg باشد.'}),
     price: z.string(),
     district: z.string(),
 })
+export type CreateFormState = {
+    errors?: {
+        category?: string[],
+        title?: string[],
+        image?: string[],
+        price?: string[],
+        district?: string[],
+    },
+    message?: string,
+} | undefined;
