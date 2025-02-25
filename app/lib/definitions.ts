@@ -14,3 +14,12 @@ export type FormState = {
     },
     message?: string,
 } | undefined;
+
+export const CreatePostFormSchema = z.object({
+    category: z.string(),
+    title: z.string(),
+    desc: z.string(),
+    image: z.instanceof(File),
+    price: z.string(),
+    district: z.string(),
+})

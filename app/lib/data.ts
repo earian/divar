@@ -13,7 +13,7 @@ export async function fetchUser(email: string){
 
 export async function fetchLatestPosts(){
     try{
-        const posts = await sql`SELECT title, price, location, thumbnail 
+        const posts = await sql`SELECT title, price, district, thumbnail 
                                 FROM posts
                                 ORDER BY date DESC
                                 LIMIT 5`
@@ -29,7 +29,6 @@ export async function fetchCategories(){
     try{
         const categories = await sql`SELECT name, value FROM categories`
 
-        console.log(categories)
         return categories.rows;
     }catch(err){
         console.log('failed to fetch categories')

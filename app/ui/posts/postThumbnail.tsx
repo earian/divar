@@ -4,7 +4,7 @@ import { rubik } from "../fonts";
 export default async function PostThumbnail(props: {
     title: string;
     price: string;
-    location: string;
+    district: string;
     thumbnail?: string;
 }){
     return (
@@ -13,7 +13,7 @@ export default async function PostThumbnail(props: {
                 <h3 className={`${rubik.className} font-[700] text-[1.120rem]`}>{props.title}</h3>
                 <div>
                     <p><span className="ml-[0.425rem]">{props.price}</span>تومان</p>
-                    <p>{`در ${props.location}`}</p>
+                    <p>{`در ${props.district}`}</p>
                 </div>
             </div>
             <Image 
