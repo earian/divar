@@ -19,7 +19,7 @@ export default function Form(props: {
                 </select>
             {state?.errors.category && <div>{state.errors.category}</div>}
             <label htmlFor="title">عنوان آگهی*</label>
-            <input type="text" name="title" className="block m-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" maxLength={30} placeholder="فروش آپارتمان در ..."/>
+            <input type="text" name="title" className="block m-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" maxLength={50} placeholder="فروش آپارتمان در ..."/>
             <label htmlFor="desc">{`توضیحات(اختیاری)`}</label>
             <textarea name="desc" cols={5} rows={5} className="block m-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" ></textarea>
             <label htmlFor="images">عکس‌ خود را بارگزاری کنید:</label>

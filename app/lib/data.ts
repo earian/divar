@@ -26,12 +26,15 @@ export async function fetchLatestPosts(){
 }
 
 export async function fetchCategories(){
+
+    await new Promise((res)=> setTimeout(res,5000))
+
     try{
-        const categories = await sql`SELECT name, value FROM categories`
+        const categories = await sql`SELECT * FROM categories`
 
         return categories.rows;
     }catch(err){
-        console.log('failed to fetch categories')
+        console.log(err)
         throw new Error('Failed to fetch categories.')
     }
 }

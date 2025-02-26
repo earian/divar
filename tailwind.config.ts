@@ -13,6 +13,13 @@ export default {
         foreground: "var(--foreground)",
       },
     },
+    keyframes:{
+      shimmer: {
+        '100%': {
+          transform: 'translateX(100%)',
+        }
+      }
+    }
   },
   plugins: [],
 } satisfies Config;
