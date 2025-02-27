@@ -27,8 +27,6 @@ export async function fetchLatestPosts(){
 
 export async function fetchCategories(){
 
-    await new Promise((res)=> setTimeout(res,5000))
-
     try{
         const categories = await sql`SELECT * FROM categories`
 

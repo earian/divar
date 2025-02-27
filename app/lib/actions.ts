@@ -15,7 +15,7 @@ export async function authenticate(state: FormState, formData: FormData){
         if(!validatedFields.success){
             return {
                 errors: validatedFields.error.flatten().fieldErrors,
-                message: 'لطفا مقادیر صحیح را وارد کنید.'
+                message: 'لطفا مقادیر صحیح را وارد کنید.',
             }
         }
         const {email, password} = validatedFields.data;
@@ -65,7 +65,7 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
             method: 'POST',
             body: data,
         })
-        if(!res.ok) throw new Error("server Error");
+        if(!res.ok) throw new Error("server Error, Couldn't upload the image.");
         imageUrl = `/poster/${imageFile.name}`;
         console.log(imageUrl);
         await sql`
