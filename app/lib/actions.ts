@@ -75,3 +75,7 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     
 
 }
+
+export async function revalidateHome(){
+    revalidatePath('/');
+}
