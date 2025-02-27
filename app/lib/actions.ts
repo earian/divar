@@ -2,9 +2,11 @@
 import { CreateFormState, CreatePostFormSchema, FormState, LoginFormSchema } from "./definitions";
 import { fetchUser } from "./data";
 import { redirect } from "next/navigation";
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { sql } from "@vercel/postgres";
 import { v4 as uuidv4 } from "uuid";
+import { put } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 
 export async function authenticate(state: FormState, formData: FormData){
         const validatedFields = LoginFormSchema.safeParse({
@@ -53,30 +55,23 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     }
     
     const {category, title, desc, price, district} = validatedFields.data;
-    const imageFile : any = formData.get('image');
-    let imageUrl;
+    const imageFile : File | null = formData.get('image') as File;
     const date = new Date().toISOString().split('T')[0];
     const id = uuidv4();
-    const host = (await headers()).get("host");
-    const data = new FormData();
-    data.set('file', imageFile);
     try{
-        const res = await fetch(`http://${host}/api/upload`, {
-            method: 'POST',
-            body: data,
-        })
-        if(!res.ok) throw new Error("server Error, Couldn't upload the image.");
-        imageUrl = `/poster/${imageFile.name}`;
-        console.log(imageUrl);
+        const blob = await put(`posts/${imageFile.name}`, imageFile, {
+            access: 'public',
+          });
         await sql`
                 INSERT INTO posts ("postId", title, description, price, category, date, district, thumbnail)
-                VALUES (${id}, ${title}, ${desc}, ${price}, ${category}, ${date}, ${district}, ${imageUrl})
+                VALUES (${id}, ${title}, ${desc}, ${price}, ${category}, ${date}, ${district}, ${blob.url})
                 `
     }catch(err){
         console.log(err)
         throw new Error("Coudn't create the post.")
     }
-
-    return undefined;
+    revalidatePath('/');
+    redirect('/');
+    
 
 }

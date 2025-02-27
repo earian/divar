@@ -24,7 +24,7 @@ export default function Form(props: {
             <label htmlFor="desc">{`توضیحات(اختیاری)`}</label>
             <textarea name="desc" cols={5} rows={5} className="block m-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" ></textarea>
             <label htmlFor="images">عکس‌ خود را بارگزاری کنید:</label>
-            <input type="file" name="image" accept="image/png, image/jpeg" onChange={(e)=> {setFile(e.target.files?.[0])}} className="m-[0.875rem]"/>
+            <input type="file" name="image" accept="image/webp, image/png, image/jpeg" onChange={(e)=> {setFile(e.target.files?.[0])}} className="m-[0.875rem]"/>
             {/* {img?.src && <Image src={img.src} width={50} height={50} alt='Your prod image'/>} */}
             <label htmlFor="price" className="block">قیمت:</label>
             <input type="number" name="price" className="block m-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" placeholder="تومان"/>
