@@ -1,8 +1,10 @@
 import { fetchCategories } from "../lib/data";
 import { rubik } from "../ui/fonts";
 import Form from "../ui/form/create-form";
+import { unstable_noStore } from "next/cache";
 
 export default async function Page(){
+    unstable_noStore();
     const categories = await fetchCategories();
 
     return (

@@ -1,3 +1,4 @@
+import { minify } from "next/dist/build/swc/generated-native";
 import { z } from "zod"
 
 export const LoginFormSchema = z.object({
@@ -17,10 +18,17 @@ export type FormState = {
 
 export const CreatePostFormSchema = z.object({
     category: z.string({ message: 'لطفا دسته بندی خود را انتخاب کنید.' }),
-    title: z.string({ message: 'لطفا عنوان آگهی خود را وارد کنید.'}),
+    title: z
+    .string({ message: 'لطفا عنوان آگهی خود را وارد کنید.'})
+    .min(3, { message: 'عنوان آگهی حداقل باید یک کلمه باشد.'}),
     desc: z.string(),
-    image: z.instanceof(File,{ message: 'فایل انتخابی باید از نوع png/jpeg باشد.'}),
-    price: z.string(),
+    image: z
+    .instanceof(File,{ message: 'فایل انتخابی باید از نوع png/jpeg باشد.'}),
+    price: z
+    .string()
+    .transform((num)=> Number(num))
+    .refine((num)=> !isNaN(num), { message: 'قیمت باید یک عدد معتبر باشد.' })
+    .refine((num)=> num >= 10000, { message: 'قیمت باید بیشتر از ۱۰،۰۰۰ تومان باشد.' }),
     district: z.string(),
 })
 export type CreateFormState = {

@@ -51,31 +51,41 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
         const fieldErrors = validatedFields.error.flatten().fieldErrors;
         return {
             errors: fieldErrors,
+            message: 'آگهی ثبت نشد، لطفا فرم رو کامل پر کنید.',
         }
     }
     
     const {category, title, desc, price, district} = validatedFields.data;
-    const imageFile : File | null = formData.get('image') as File;
+    const imageFile = formData.get('image') as File;
     const date = new Date().toISOString().split('T')[0];
     const id = uuidv4();
     try{
-        const blob = await put(`posts/${imageFile.name}`, imageFile, {
-            access: 'public',
-          });
-        await sql`
-                INSERT INTO posts ("postId", title, description, price, category, date, district, thumbnail)
-                VALUES (${id}, ${title}, ${desc}, ${price}, ${category}, ${date}, ${district}, ${blob.url})
-                `
+        let blob = null;
+        if(imageFile && imageFile.size !== 0){
+            blob = await put(`posts/${imageFile.name}`, imageFile, {
+                access: 'public',
+              });
+        }
+        let query = `
+        INSERT INTO posts ("postId", title, description, price, category, date, district
+        ${blob ? ', thumbnail' : ''})
+        VALUES ($1, $2, $3, $4, $5, $6, $7
+        ${blob ? ', $8' : ''})
+      `;
+    
+      let params = [id, title, desc, price, category, date, district];
+      if (blob) {
+        params.push(blob.url);
+      }
+    
+      // Execute query
+      await sql.query(query, params);    
     }catch(err){
         console.log(err)
         throw new Error("Coudn't create the post.")
     }
     revalidatePath('/');
     redirect('/');
-    
+    // return { };
 
-}
-
-export async function revalidateHome(){
-    revalidatePath('/');
 }
