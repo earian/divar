@@ -12,16 +12,20 @@ export default function BottomNav(){
             <BottomNavItem title='آگهی‌ها' />
             </Link>
             
+            <Link href={'#'}>
             <BottomNavItem icon={BookmarkIcon} title='نشان‌ها' />
-            
+            </Link>
+
             <Link 
             href={'/create'}
             >
             <BottomNavItem icon={PlusCircleIcon} title='ثبت آگهی' />
             </Link>
             
+            <Link href={'#'}>
             <BottomNavItem icon={ChatBubbleLeftRightIcon} title='چت' />
-            
+            </Link>
+
             <Link
             href={'/user'}
             >

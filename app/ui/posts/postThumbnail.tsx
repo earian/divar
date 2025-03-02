@@ -20,7 +20,7 @@ export default async function PostThumbnail(props: {
             src={props.thumbnail || '/poster/thumbnail-placeholder.avif'}
             width={100}
             height={100}
-            alt="selling house"
+            alt={props.title}
             className="rounded-[0.450rem] w-[150px] h-[150px]"
             />
         </div>

@@ -14,6 +14,10 @@ export type FormState = {
         password?: string[],
     },
     message?: string,
+    values?: {
+        email?: string,
+        password?: string,
+    }
 } | undefined;
 
 export const CreatePostFormSchema = z.object({
@@ -40,4 +44,11 @@ export type CreateFormState = {
         district?: string[],
     },
     message?: string,
+    values: {
+        category: string,
+        title?: string,
+        desc?: string,
+        price?: string,
+        district?: string,
+    },
 } | undefined;

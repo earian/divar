@@ -1,3 +1,5 @@
+//this api route is for saving the uploaded image file in your /public/poster/file.name route
+
 import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import { join } from "path";

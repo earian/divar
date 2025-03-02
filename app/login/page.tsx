@@ -12,7 +12,7 @@ export default function LoginPage(){
             <label htmlFor="email" className="block m-[0.350rem]">
                 ایمیل
             </label>
-            <input type="text" name="email" dir="ltr" placeholder="example@mail.com" className="bg-[#333] p-[0.350rem] w-full h-[2.575rem]"/>
+            <input type="text" name="email" dir="ltr" placeholder="example@mail.com" defaultValue={state?.values?.email || ''} className="bg-[#333] p-[0.350rem] w-full h-[2.575rem]"/>
             {state?.errors?.email && 
             <div>
                 <p className="text-[red]">{state.errors.email}</p>
@@ -21,7 +21,7 @@ export default function LoginPage(){
             <label htmlFor="password" className="block m-[0.350rem]">
                 رمز عبور
             </label>
-            <input type="password" name="password" dir="ltr" className="bg-[#333] p-[0.350rem] w-full h-[2.575rem]"/>
+            <input type="password" name="password" dir="ltr" defaultValue={state?.values?.password || ''} className="bg-[#333] p-[0.350rem] w-full h-[2.575rem]"/>
             {state?.errors?.password && 
             <div>
                 <p className="text-[red]">{state.errors.password}</p>

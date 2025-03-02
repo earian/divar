@@ -18,6 +18,10 @@ export async function authenticate(state: FormState, formData: FormData){
             return {
                 errors: validatedFields.error.flatten().fieldErrors,
                 message: 'لطفا مقادیر صحیح را وارد کنید.',
+                values: {
+                    email: formData.get('email') as string || '',
+                    password: formData.get('password') as string || '',
+                }
             }
         }
         const {email, password} = validatedFields.data;
@@ -38,6 +42,7 @@ export async function authenticate(state: FormState, formData: FormData){
 
 
 export async function createPost(prevState: CreateFormState, formData: FormData){
+    console.log(formData.get('category'))
     const validatedFields = CreatePostFormSchema.safeParse({
         category: formData.get('category'),
         title: formData.get('title'),
@@ -52,6 +57,13 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
         return {
             errors: fieldErrors,
             message: 'آگهی ثبت نشد، لطفا فرم رو کامل پر کنید.',
+            values: { 
+                category: formData.get('category') as string,
+                title: formData.get('title') as string || '',
+                desc: formData.get('desc') as string || '',
+                price: formData.get('price') as string || '',
+                district: formData.get('district') as string || '',
+              },
         }
     }
     
@@ -86,6 +98,6 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     }
     revalidatePath('/');
     redirect('/');
-    // return { };
+    return;
 
 }
