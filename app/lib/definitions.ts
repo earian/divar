@@ -1,4 +1,3 @@
-import { minify } from "next/dist/build/swc/generated-native";
 import { z } from "zod"
 
 export const LoginFormSchema = z.object({

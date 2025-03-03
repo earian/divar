@@ -15,11 +15,11 @@ export default function Form(props: {
 
     return (
         <form action={formAction}>
-            <label htmlFor="category">دسته بندی خود را انتخاب کنید:</label>
+            <label htmlFor="category">دسته‌ی آگهی</label>
                 <select name="category" 
                         value={ category.name } 
                         onChange={(e)=> setCategory({ name: e.target.value })} 
-                        className="text-[white] bg-[#333] p-[0.250rem] block m-[0.650rem]"
+                        className="text-[white] bg-[#333] p-[0.250rem] block my-[0.650rem] w-full rounded-md"
                         >
                     <option value="select" disabled={true}>انتخاب کنید</option>
                     {props.categories.map((cat,ind)=> <option value={cat.value} key={cat.value}>{cat.name}</option>)}
