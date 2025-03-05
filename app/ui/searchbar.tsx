@@ -9,6 +9,11 @@ export default function Search(props: {
     }
     placeholder?: string;
 }){
+    function handleSearchClick(){
+        document.body.style.overflow = 'hidden';
+        props.state.setIsSearching(true)
+    }
+
     return (
         <div className={`w-full flex items-center bg-stone-900 h-10 rounded-[5px] border-[0.5px] border-[hsla(0, 0%, 100%, 0.32)] border-solid`}>
             <form action="" className={`relative h-full bg-transparent ${props.state.isSearching ? 'w-full' : 'w-[80%]'}`}>
@@ -17,10 +22,7 @@ export default function Search(props: {
                     name="search" 
                     placeholder={props.placeholder} 
                     className='w-full h-full bg-transparent p-[.5rem] outline-none text-[1.225rem]'
-                    onClick={()=> {
-                        document.body.style.overflow = 'hidden';
-                        props.state.setIsSearching(true)
-                    }}
+                    onClick={()=> handleSearchClick()}
                     />
                 <MagnifyingGlassIcon className='size-5 m-auto absolute left-1 top-[50%] bottom-[50%]' />
             </form>

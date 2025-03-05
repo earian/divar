@@ -12,3 +12,17 @@ export function CategorySkeleton(){
         </div>
     )
 }
+
+export function PostSkeleton(){
+    return (
+        <div className={`${shimmer} rounded-md flex flex-row justify-between items-start p-[1rem] relative overflow-hidden`}>
+            <div className="flex flex-col h-[100px] justify-between p-[0.350rem]">
+                <h3 className={`w-[12rem] h-[1.5rem] bg-[#333] z-[2] rounded-md`}></h3>
+                <div className="w-[8rem] h-[1rem] bg-[#333] z-[2] rounded-md"></div>
+            </div>
+            <div
+            className="size-[7rem] bg-[#333] rounded-md z-[2] float-left"
+            ></div>
+        </div>
+    )
+}

@@ -9,30 +9,38 @@ export default function BottomNav(){
     if(pathname.startsWith('/create')) return 
 
     return (
-        <div className="fixed left-0 bottom-0 w-full h-[4rem] flex flex-row justify-around items-center bg-[#333] min-h-[0] pb-[1rem]">
+        <div className="fixed left-0 bottom-0 w-full h-[4rem] flex flex-row items-center bg-[#333] min-h-[0]">
             <Link
             href={'/'}
-            className="flex items-center justify-center"
+            className="flex items-center justify-center size-full"
             >
             <BottomNavItem title='آگهی‌ها' />
             </Link>
             
-            <Link href={'#'}>
+            <Link 
+            href={'#'}
+            className="size-full"
+            >
             <BottomNavItem icon={BookmarkIcon} title='نشان‌ها' />
             </Link>
 
             <Link 
             href={'/create'}
+            className="size-full"
             >
             <BottomNavItem icon={PlusCircleIcon} title='ثبت آگهی' />
             </Link>
             
-            <Link href={'#'}>
+            <Link 
+            href={'#'}
+            className="size-full"
+            >
             <BottomNavItem icon={ChatBubbleLeftRightIcon} title='چت' />
             </Link>
 
             <Link
             href={'/user'}
+            className="size-full"
             >
             <BottomNavItem icon={UserCircleIcon} title='دیوار من' />
             </Link>
