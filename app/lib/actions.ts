@@ -2,11 +2,11 @@
 import { CreateFormState, CreatePostFormSchema, FormState, LoginFormSchema } from "./definitions";
 import { fetchUser } from "./data";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { sql } from "@vercel/postgres";
 import { v4 as uuidv4 } from "uuid";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
+import { CreateSession } from "./session";
 
 export async function authenticate(state: FormState, formData: FormData){
         const validatedFields = LoginFormSchema.safeParse({
@@ -29,15 +29,10 @@ export async function authenticate(state: FormState, formData: FormData){
         if(user.rows.length == 0) return { message: `چنین کاربری وجود ندارد.` }
         const passwordMatch = (password === user.rows[0].password);
         if(passwordMatch) {
-            const cookieStore = cookies();
-            (await cookieStore).set("login","true", {
-                httpOnly: false,
-                secure: true,
-                path: '/',
-                maxAge: 60 * 60 * 24 * 7,
-            })
+            //the user is validated
+            await CreateSession(user.rows[0].id);
+            redirect('/');
         }
-        redirect('/user');
 }
 
 

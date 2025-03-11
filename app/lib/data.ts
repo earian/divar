@@ -7,7 +7,18 @@ export async function fetchUser(email: string){
         return user;
     }catch (err){
         console.log(err);
-        throw new Error(`Coudn't fetch the data from the database.`);
+        throw new Error(`Coudn't fetch the user from the database.`);
+    }
+}
+
+export async function fetchUserById(id: any) {
+    try{
+        const user = await sql`SELECT * FROM users WHERE id=${id}`;
+
+        return user.rows[0];
+    }catch (err){
+        console.log(err);
+        throw new Error(`Coudn't fetch the user with id from the database.`);
     }
 }
 

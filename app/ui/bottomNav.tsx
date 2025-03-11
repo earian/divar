@@ -1,5 +1,5 @@
 'use client'
-import { BookmarkIcon, PlusCircleIcon, ChatBubbleLeftRightIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon, PlusCircleIcon, ChatBubbleLeftRightIcon, UserCircleIcon, NewspaperIcon } from "@heroicons/react/24/outline";
 import BottomNavItem from "./navigation/bottomNavItem";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,12 +9,12 @@ export default function BottomNav(){
     if(pathname.startsWith('/create')) return 
 
     return (
-        <div className="fixed left-0 bottom-0 w-full h-[4rem] flex flex-row items-center bg-[#333] min-h-[0]">
+        <div className="fixed left-0 bottom-0 w-full h-[4rem] flex flex-row items-center bg-[#333] min-h-[0] z-[300]">
             <Link
             href={'/'}
-            className="flex items-center justify-center size-full"
+            className="size-full"
             >
-            <BottomNavItem title='آگهی‌ها' />
+            <BottomNavItem icon={NewspaperIcon} title='آگهی‌ها' />
             </Link>
             
             <Link 
