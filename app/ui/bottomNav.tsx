@@ -4,12 +4,15 @@ import BottomNavItem from "./navigation/bottomNavItem";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+const disabledPaths = ['/create','/p/'];
+
 export default function BottomNav(){
     const pathname = usePathname();
-    if(pathname.startsWith('/create')) return 
+    const isDisabled = disabledPaths.some((path)=> pathname.startsWith(path));
+    if(isDisabled) return 
 
     return (
-        <div className="fixed left-0 bottom-0 w-full h-[4rem] flex flex-row items-center bg-[#333] min-h-[0] z-[300]">
+        <div className="fixed left-0 bottom-[-5px] w-full h-[4rem] flex flex-row items-center bg-[#333] min-h-[0] z-[300]">
             <Link
             href={'/'}
             className="size-full"

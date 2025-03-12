@@ -11,7 +11,7 @@ export async function fetchUser(email: string){
     }
 }
 
-export async function fetchUserById(id: any) {
+export async function fetchUserById(id: string) {
     try{
         const user = await sql`SELECT * FROM users WHERE id=${id}`;
 
@@ -24,7 +24,7 @@ export async function fetchUserById(id: any) {
 
 export async function fetchLatestPosts(){
     try{
-        const posts = await sql`SELECT title, price, district, thumbnail 
+        const posts = await sql`SELECT title, price, district, thumbnail, "postId"
                                 FROM posts
                                 ORDER BY date DESC
                                 LIMIT 5`
