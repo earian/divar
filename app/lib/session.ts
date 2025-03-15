@@ -26,7 +26,6 @@ export async function decrypt(session: string | undefined = ''){
         return payload;
     }catch(err){
         console.log(err);
-        deleteSession();
         //throw new Error('Failed to verify the session.');
     }
 }

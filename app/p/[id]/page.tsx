@@ -2,44 +2,49 @@ import Header from "@/app/ui/posts/post-header";
 import Images from "@/app/ui/posts/post-images";
 import Table from "@/app/ui/posts/info-table";
 import Bottom from "@/app/ui/posts/bottom-section";
+import { fetchPost } from "@/app/lib/data";
+import Category from "@/app/ui/posts/post-category";
+import { Suspense } from "react";
+import { BottomLoader, CategoryLoader } from "@/app/ui/posts/posts-skeletons";
+
+export default async function Page(props: {params: Promise<{ id: string }>}){
+    const postId = (await props.params).id;
+    const post = await fetchPost(postId);
+    //console.log(post);
 
 
-export default function Page(){
     return (
         <div 
         className="mb-[8rem]"
         >
             <Header />
-            <Images />
-            <h3
-            className="block my-[0.875rem] mr-[1.5rem]"
-            >تجهیزات و صنعتی
-            </h3>
+            <Images thumbnail={post.thumbnail}/>
+            <Suspense fallback={<CategoryLoader />}>
+                <Category value={post.category} />
+            </Suspense>
             <h2
             className="block text-[1.6rem] font-bold mr-[0.850rem]"
             >
-                عنوان آگهی
+            {post.title}
             </h2>
             <p
                 className="mr-[0.850rem] mb-[0.850rem]"
-            ><span>۱۰ ساعت پیش</span> در تهران، <span>سعید آباد</span></p>
-            <Table />
-            <section className="p-[0.875rem]">
-                <h3 className="block text-[1.4rem] font-bold">توضیحات</h3>
-                <p>ابعاد های آماده ارسال درو پنجره upvc با شیشه
-۴۰در۴۰
-۵۰در۵۰
-۸۰در۸۰
-۱۰۰در۱۰۰
-۱۲۰در۱۲۰
-۱۵۰در۱۵۰
-۱۰۰در۱۵۰
-۲۰۰در۲۰۰
-۲۰۰در۲۵۰
-۱۰۰در۲۰۰
-وهر ابعادی که شنا نیاز دارید</p>
-            </section>
-            <Bottom />
+            ><span>۱۰ ساعت پیش</span> در تهران، <span>{post.district}</span></p>
+            <textarea name="user-notes" id="user-notes" 
+            placeholder="یادداشت شما..."
+            className="hidden w-[90%] mr-[0.825rem] mb-[0.825rem] bg-[#333] rounded-sm p-[0.235rem] resize-none"
+            rows={5}
+            ></textarea>
+            <Table price={post.price}/>
+            {post.description.length != 0 &&
+                <section className="p-[0.875rem]">
+                    <h3 className="block text-[1.4rem] font-bold">توضیحات</h3>
+                    <p>{post.description}</p>
+                </section>
+            }
+            <Suspense fallback={<BottomLoader />}>
+                <Bottom creator={post.creator}/>
+            </Suspense>
         </div>
     )
 }

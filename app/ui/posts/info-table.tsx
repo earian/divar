@@ -1,10 +1,19 @@
-export default function Table(){
+import { toPersianDigits } from "@/app/lib/utils"
+
+export default function Table(props: {
+    price: number
+}){
+    const perPrice = toPersianDigits(props.price)
     return (
-        <div
-        className="flex flex-row justify-between p-[0.875rem] border-y border-[#333]"
+        <table
+        className="w-full"
         >
-            <p>قیمت</p>
-            <p>۱،۰۰۰،۰۰۰ تومان</p>
-        </div>
+            <tbody>
+                <tr className="flex flex-row justify-between p-[0.875rem] border-y border-[#333]">
+                    <th>قیمت</th>
+                    <td><span>{perPrice}</span> تومان</td>
+                </tr>
+            </tbody>
+        </table>
     )
 }

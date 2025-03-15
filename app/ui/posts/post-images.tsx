@@ -1,8 +1,14 @@
-export default function Images(){
+export default function Images(props: {
+    thumbnail: string
+}){
     return (
-        <img 
-            src='/poster/thumbnail-placeholder.avif' 
-            className="w-full"
+        <div
+        className="w-full aspect-square"
+        >
+            <img 
+            src={props.thumbnail} 
+            className="w-full max-h-[100%] object-fill"
             />
+        </div>
     )
 }

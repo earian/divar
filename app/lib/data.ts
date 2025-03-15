@@ -22,6 +22,18 @@ export async function fetchUserById(id: string) {
     }
 }
 
+export async function fetchPost(id: string){
+
+    try{
+        const data = await sql`SELECT * FROM posts WHERE "postId"=${id}`
+
+        return data.rows[0];
+    }catch(err){
+        console.log(err)
+        throw new Error('Failed to fetch the post.')
+    }
+}
+
 export async function fetchLatestPosts(){
     try{
         const posts = await sql`SELECT title, price, district, thumbnail, "postId"
@@ -45,5 +57,16 @@ export async function fetchCategories(){
     }catch(err){
         console.log(err)
         throw new Error('Failed to fetch categories.')
+    }
+}
+
+export async function fetchCategoryByValue(val: string){
+    try{
+        const categories = await sql`SELECT name FROM categories WHERE value=${val}`
+
+        return categories.rows[0];
+    }catch(err){
+        console.log(err)
+        throw new Error('Failed to fetch category value.')
     }
 }
