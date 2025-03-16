@@ -1,16 +1,37 @@
+'use client'
 import Header from "@/app/ui/posts/post-header";
 import Images from "@/app/ui/posts/post-images";
 import Table from "@/app/ui/posts/info-table";
 import Bottom from "@/app/ui/posts/bottom-section";
-import { fetchPost } from "@/app/lib/data";
 import Category from "@/app/ui/posts/post-category";
-import { Suspense } from "react";
-import { BottomLoader, CategoryLoader } from "@/app/ui/posts/posts-skeletons";
+import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import Load from "./loading";
+import { Post } from "@/app/lib/definitions";
 
-export default async function Page(props: {params: Promise<{ id: string }>}){
-    const postId = (await props.params).id;
-    const post = await fetchPost(postId);
-    //console.log(post);
+
+export default function Page(){
+    const { id } = useParams();
+    const [post, setPost] = useState< Post | undefined >();
+    
+    useEffect(()=>{
+        async function getPost(){
+            try{
+                const res = await fetch(`/api/posts/${id}`)
+                //console.log("fetch result: ", res);
+                if(!res.ok) throw new Error("Failed to fetch the post.")
+
+                const postJson = await res.json() as Post;
+                //console.log('Post Json: ', postJson)
+                setPost(postJson);
+            }catch(err){
+                console.log(err)
+            }
+        }
+        getPost()
+    },[])
+
+    if(post === undefined) return <Load />
 
 
     return (
@@ -19,9 +40,7 @@ export default async function Page(props: {params: Promise<{ id: string }>}){
         >
             <Header />
             <Images thumbnail={post.thumbnail}/>
-            <Suspense fallback={<CategoryLoader />}>
-                <Category value={post.category} />
-            </Suspense>
+            <Category value={post.category} />
             <h2
             className="block text-[1.6rem] font-bold mr-[0.850rem]"
             >
@@ -39,12 +58,10 @@ export default async function Page(props: {params: Promise<{ id: string }>}){
             {post.description.length != 0 &&
                 <section className="p-[0.875rem]">
                     <h3 className="block text-[1.4rem] font-bold">توضیحات</h3>
-                    <p>{post.description}</p>
+                    <p>{ post.description }</p>
                 </section>
             }
-            <Suspense fallback={<BottomLoader />}>
                 <Bottom creator={post.creator}/>
-            </Suspense>
         </div>
     )
 }

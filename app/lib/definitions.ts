@@ -51,3 +51,15 @@ export type CreateFormState = {
         district?: string,
     },
 } | undefined;
+
+export type Post = {
+    category: string,
+    creator: string | null,
+    date: string,
+    description: string,
+    district: string,
+    postId: string,
+    price: number,
+    thumbnail: string,
+    title: string,
+}

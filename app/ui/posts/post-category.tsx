@@ -1,15 +1,25 @@
-import { fetchCategoryByValue } from "@/app/lib/data"
-
-export default async function Category(props: {
+export default function Category(props: {
     value: string
 }){
-    const data = await fetchCategoryByValue(props.value);
-    const name = data.name
+    const catMap : any = {"community": "اجتماعی",
+                    "electronic-devices": "کالای دیجیتال",
+                    "hobbby": "سرگرمی و فراغت",
+                    "home-kitchen": "خانه و آشپزخانه",
+                    "jobs": "استخدام و کاریابی",
+                    "personal": "وسایل شخصی",
+                    "real-state": "املاک",
+                    "services": "خدمات",
+                    "tools": "تجهیزات و صنعتی",
+                    "vehicles": "وسایل نقلیه"}
+    const name = catMap[props.value]
     
     return(
         <h3
-            className="block my-[0.875rem] mr-[1.5rem]"
-            >{name}</h3>
+        className="my-[0.875rem] mr-[1.5rem]"
+        defaultValue={props.value}
+        >
+        {name}
+        </h3>
     )
 
 }

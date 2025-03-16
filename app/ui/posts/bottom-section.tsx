@@ -1,16 +1,25 @@
-import { whois } from "@/app/lib/user-actions"
-import Button from "./button"
+import { useEffect, useState } from "react";
+import Button from "./button";
+import { BottomLoader } from "./posts-skeletons";
 
-export default async function Bottom(props: {
-    creator: string,
+export default function Bottom(props: {
+    creator: string | null,
 }){
-    let buttonVals = [];
-    const userId = await whois();
-    if(userId == props.creator){
-        buttonVals = ['ویرایش','حذف آگهی'];
-    }else {
-        buttonVals = ['چت','اطلاعات تماس'];
-    }
+    const [isOwner, setIsOwner] = useState< true | false | undefined >(undefined);
+    let buttonVals = ['چت','اطلاعات تماس'];
+    if(isOwner) buttonVals = ['ویرایش','حذف آگهی'];
+    
+    useEffect(()=>{
+        async function getOwner(){
+            const res = await fetch(`/api/auth/${props.creator}`);
+            if(!res.ok) throw new Error('Data is not valid! :(')
+            const data = await res.json();
+            setIsOwner(data.success);
+        }
+        getOwner()
+    },[])
+
+    if(isOwner == undefined) return <BottomLoader />
 
     return (
         <div
