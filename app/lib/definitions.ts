@@ -63,3 +63,10 @@ export type Post = {
     thumbnail: string,
     title: string,
 }
+
+export type User = {
+    id: string,
+    name: string,
+    email: string,
+    'name(per)': string,
+}
