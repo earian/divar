@@ -11,7 +11,7 @@ export default function Bottom(props: {
     
     useEffect(()=>{
         async function getOwner(){
-            const res = await fetch(`/api/auth/${props.creator}`);
+            const res = await fetch(`/api/vp/${props.creator}`);
             if(!res.ok) throw new Error('Data is not valid! :(')
             const data = await res.json();
             setIsOwner(data.success);

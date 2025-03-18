@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { whois } from "@/app/lib/user-actions";
 
-export async function GET(req: NextRequest, { params } : { params : { creatorId: string } }){
-    //getting the logged in user id & creator id with parallel requests 😎
-    const [userId, creatorId] = await Promise.all([whois(), params?.creatorId]);
+export async function GET(req: NextRequest, { params } : { params : Promise<{ creatorId: string }> }){
+    const { creatorId } = await params;
+    const userId = await whois();
     if(!userId) {
         console.log('No user is logged in.');
         return NextResponse.json({ success: false })
