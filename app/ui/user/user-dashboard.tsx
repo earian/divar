@@ -1,10 +1,14 @@
 'use client'
 import { User } from "@/app/lib/definitions"
 import { UserIcon, DocumentDuplicateIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline"
+import { useActionState } from "react";
+import { signOut } from "@/app/lib/user-actions";
 
 export default function Dashboard(props: {
     user: User,
 }){
+    const [state, signOutAction, isPending] = useActionState(signOut, undefined);
+
     return (
         <main
         className="p-[1rem]"
@@ -23,7 +27,10 @@ export default function Dashboard(props: {
                 <p>آگهی‌های من</p>
             </div>
             <section className="border-y border-[#333] py-[0.5rem] px-[1rem]">
-                <button className="flex flex-row items-center gap-[0.875rem]">
+                <button 
+                onClick={()=> signOut()}
+                className="flex flex-row items-center gap-[0.875rem]"
+                >
                     <i><ArrowRightStartOnRectangleIcon className="size-6"/></i>
                     <p>خروج</p>
                 </button>

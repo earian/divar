@@ -1,5 +1,5 @@
 import { rubik } from "../ui/fonts";
-import { getUser } from "../lib/user-actions";
+import { getUser } from "../lib/session";
 import Dashboard from "../ui/user/user-dashboard";
 import GoToLogin from "../ui/user/login-redirect";
 

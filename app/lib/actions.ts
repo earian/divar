@@ -92,6 +92,5 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     }
     revalidatePath('/');
     redirect('/');
-    return;
 
 }

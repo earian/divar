@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { whois } from "@/app/lib/user-actions";
+import { whois } from "@/app/lib/session";
 
 export async function GET(req: NextRequest, { params } : { params : Promise<{ creatorId: string }> }){
     const { creatorId } = await params;

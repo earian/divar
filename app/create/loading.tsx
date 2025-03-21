@@ -1,9 +1,18 @@
-export default function Load(){
+import { rubik } from "../ui/fonts"
+import Header from "../ui/navigation/create-header";
+import Loader from "../ui/spin-loader";
+
+export default function Page(){
     return(
         <div 
-        className="m-[1rem]"
+        className={`${rubik.className}`}
         >
-            در حال پردازش...
+            <Header />
+            <div
+            className="flex justify-center mt-[1.3rem]"
+            >
+                <Loader />
+            </div>
         </div>
     )
 }

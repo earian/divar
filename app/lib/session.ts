@@ -1,6 +1,8 @@
 'use server';
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { fetchUserById } from "./data";
+import { User } from "./definitions";
 
 export type SessionPayload = {
     userId: string,
@@ -47,4 +49,19 @@ export async function CreateSession(userId: string){
 export async function deleteSession(){
     const cookieStore = await cookies();
     cookieStore.delete('session');
+}
+
+export async function whois(){
+    const cookie = (await cookies()).get('session')?.value;
+    if(!cookie) return undefined;
+    const session = await decrypt(cookie);
+    return session?.userId as string;
+}
+
+export async function getUser(){
+    const cookie = (await cookies()).get('session')?.value;
+    if(!cookie) return null;
+    const session = await decrypt(cookie);
+    const user = await fetchUserById(session?.userId as string);
+    return user as User;
 }

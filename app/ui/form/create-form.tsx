@@ -6,7 +6,7 @@ import { QueryResultRow } from "@vercel/postgres";
 export default function Form(props: {
     categories: QueryResultRow[];
 }){
-    const [state, formAction, isPending] = useActionState( createPost, undefined );
+    const [state, formAction, isPending] = useActionState(createPost, undefined);
     const [category, setCategory] = useState({ name: 'select' });
     useEffect(()=>{
         if(state) setCategory({ name: state.values.category });
@@ -43,7 +43,7 @@ export default function Form(props: {
                 cols={5} 
                 rows={5} 
                 defaultValue={state?.values.desc} 
-                className="block my-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" 
+                className="block my-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full resize-none" 
                 >
             </textarea>
             <label htmlFor="images">عکس‌ خود را بارگزاری کنید:</label>
