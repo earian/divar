@@ -94,3 +94,16 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     redirect('/');
 
 }
+
+export async function togglePostActivation(id: string){
+    try{
+        await sql`UPDATE posts
+                    SET "isActive" = NOT "isActive"
+                    WHERE "postId" = ${id};
+                    `
+        return { message: 'success' };
+    }catch(err){
+        console.log(err);
+        throw new Error("Failed to toggle the post activation.")
+    }
+}

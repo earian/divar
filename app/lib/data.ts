@@ -73,7 +73,7 @@ export async function fetchCategoryByValue(val: string){
 
 export async function fetchPostsByUserId(id: string){
     try{
-        const data = await sql`SELECT title, thumbnail, "postId" 
+        const data = await sql`SELECT title, thumbnail, "postId", "isActive"
                                 FROM posts
                                 WHERE creator=${id}
                                 ORDER BY date DESC

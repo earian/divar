@@ -1,63 +1,27 @@
 'use client';
-import Link from "next/link";
-import Image from "next/image";
-import { TrashIcon } from "@heroicons/react/24/outline";
+
 import { use } from "react";
+import { useSearchParams } from "next/navigation";
+import Post from "./post-card";
 
 export default function Posts(props: {
-    posts: Promise<{ postId: string, thumbnail: string, title: string }[]>
+    posts: Promise<{ postId: string, thumbnail: string, title: string, isActive: boolean }[]>
 }){
     const allPosts = use(props.posts);
+    const searchParams = useSearchParams();
+    const tab = searchParams.get('tab');
+    let holder = allPosts;
+    if(tab == 'active'){
+        holder = allPosts.filter((p)=> p.isActive);
+    }else if(tab == 'not-active'){
+        holder = allPosts.filter(p=> !p.isActive);
+    }
+    
 
     return(
         <>
-        {allPosts.map((post,ind) =>
-            <Link
-            href={`/p/${post.postId}`}
-            className="block relative flex flex-row p-[1rem] bg-[#333] mb-[0.560rem]"
-            key={post.postId}
-            >
-                <Image
-                src={post.thumbnail}
-                width={100}
-                height={100}
-                alt=""
-                className="float-right ml-[0.560rem] aspect-square"
-                />
-                
-                <h2>{post.title}</h2>
-                
-                <div 
-                className="absolute inline-block p-[0.235rem] left-[1rem] bottom-[1rem] hover:bg-[gray] hover:rounded-md"
-                
-                >
-                    <TrashIcon className="size-6"/>
-                </div>
-            </Link>
-            )}
-            {allPosts.map((post,ind) =>
-            <Link
-            href={`/p/${post.postId}`}
-            className="block relative flex flex-row p-[1rem] bg-[#333] mb-[0.560rem]"
-            key={post.postId}
-            >
-                <Image
-                src={post.thumbnail}
-                width={100}
-                height={100}
-                alt=""
-                className="float-right ml-[0.560rem] aspect-square"
-                />
-                
-                <h2>{post.title}</h2>
-                
-                <div 
-                className="absolute inline-block p-[0.235rem] left-[1rem] bottom-[1rem] hover:bg-[gray] hover:rounded-md"
-                
-                >
-                    <TrashIcon className="size-6"/>
-                </div>
-            </Link>
+        {holder.map((post,ind) =>
+            <Post info={post} key={post.postId}/>
             )}
         </>
 
