@@ -12,7 +12,7 @@ export default async function PostThumbnail(props: {
     return (
         <Link 
         href={`/p/${props.postId}`}
-        className="flex flex-row justify-between items-start p-[1rem] border-b-[1px] border-[#333]"
+        className="flex flex-row justify-between items-start py-[1rem] border-b-[1px] border-[#333]"
         >
             <div className="flex flex-col h-[150px] justify-between p-[0.350rem]">
                 <h3 className={`${rubik.className} font-[700] text-[1.120rem]`}>{props.title}</h3>

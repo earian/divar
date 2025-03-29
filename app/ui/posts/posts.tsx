@@ -7,7 +7,9 @@ export default async function Posts(){
     const posts = data.rows;
 
     return (
-        <div>
+        <div
+        className="px-[0.875rem]"
+        >
             {posts.map((post, ind)=> {
                 //Making the price a persian digit formatted string
                 const perPrice = toPersianDigits(post.price);

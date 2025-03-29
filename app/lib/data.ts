@@ -70,3 +70,17 @@ export async function fetchCategoryByValue(val: string){
         throw new Error('Failed to fetch category value.')
     }
 }
+
+export async function fetchPostsByUserId(id: string){
+    try{
+        const data = await sql`SELECT title, thumbnail, "postId" 
+                                FROM posts
+                                WHERE creator=${id}
+                                ORDER BY date DESC
+                                LIMIT 5`
+        return data.rows as [];
+    }catch(err){
+        console.log(err);
+        throw new Error('Failed to fetch posts with user id.')
+    }
+}

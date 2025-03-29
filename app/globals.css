@@ -19,3 +19,7 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* My custom utility classes */
+.scrollbar-hide::-webkit-scrollbar{
+  display: none;
+}
