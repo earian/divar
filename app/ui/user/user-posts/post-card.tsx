@@ -3,47 +3,73 @@ import Link from "next/link";
 import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
-import { useState, useOptimistic, useTransition } from "react";
-//no issue with the toggling for database
-import { togglePostActivation } from "@/app/lib/actions";
+import { useOptimistic, useTransition } from "react";
+import { togglePostActivation, deletePostById } from "@/app/lib/actions";
 
 
 export default function Post(props: {
-    info: { postId: string, thumbnail: string, title: string, isActive: boolean }
+    post: { postId: string, thumbnail: string, title: string, isActive: boolean },
+    dispatch: Function,
 }){
-    const [isActive, setIsActive] = useState(props.info.isActive);
-    const [optimisticActive, setOptimisticActive] = useOptimistic(isActive);
+    const [optimisticActive, setOptimisticActive] = useOptimistic(props.post.isActive);
     const [pending, startTransition] = useTransition();
+    const [deletePending, startDelete] = useTransition();
     
 
     async function handleActivationClick(){
         startTransition(async ()=>{
-            setOptimisticActive(!isActive);
+            setOptimisticActive(!props.post.isActive);
             try{
-                await togglePostActivation(props.info.postId);
-                setIsActive(!isActive);
+                await togglePostActivation(props.post.postId);
+                props.dispatch({
+                    type: 'activation',
+                    post: {
+                        ...props.post,
+                        postId: props.post.postId,
+                        isActive: !props.post.isActive,
+                    }
+                })
             }catch(err){
                 console.log(err);
             }
         })
     }
+    async function handleDeleteClick(){
+        const res = prompt('آیا مطمئنید که میخواهید این آگهی رو پاک کنید؟','برای حذف yes رو بنویسید و ok رو بزنید.');
+        let text;
+        if(res) text = res?.toLocaleLowerCase();
+        if(text == 'yes'){
+            startDelete(async ()=> {
+                try{
+                    await deletePostById(props.post.postId, props.post.thumbnail);
+                    props.dispatch({
+                        type: 'delete',
+                        postId: props.post.postId,
+                    })
+                }catch(err){
+                    console.log(err)
+                }
+            })
+        }
+    }
+
 
 
     return (
         <Link
-            href={`/p/${props.info.postId}`}
+            href={`/p/${props.post.postId}`}
             className="block relative flex flex-row p-[1rem] bg-[#333] mb-[0.560rem]"
-            key={props.info.postId}
+            key={props.post.postId}
             >
                 <Image
-                src={props.info.thumbnail}
+                src={props.post.thumbnail || '/poster/thumbnail-placeholder.avif'}
                 width={100}
                 height={100}
                 alt=""
                 className="float-right ml-[0.560rem] aspect-square"
                 />
                 
-                <h2>{props.info.title}</h2>
+                <h2>{props.post.title}</h2>
                 
 
                 <div
@@ -55,6 +81,7 @@ export default function Post(props: {
                 >
                     <span
                     className="p-[0.235rem] hover:bg-[gray] hover:rounded-md"
+                    onClick={()=> handleDeleteClick()}
                     >
                         <TrashIcon className="size-6"/>
                     </span>

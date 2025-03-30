@@ -38,6 +38,7 @@ export async function fetchLatestPosts(){
     try{
         const posts = await sql`SELECT title, price, district, thumbnail, "postId"
                                 FROM posts
+                                WHERE "isActive" = TRUE
                                 ORDER BY date DESC
                                 LIMIT 5`
 
