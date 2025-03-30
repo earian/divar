@@ -15,9 +15,9 @@ export default function Filter(){
         <ul
         className="w-full flex flex-row overflow-x-scroll sticky top-[4.5rem] z-[5] bg-[#242424] mb-[1rem] border-b-[1px] border-[#333] px-[0.350rem] scrollbar-hide"
         >
-            <li onClick={() => setTab('all')} className={`${(tab == null || tab == 'all') && "border-b-[1px] border-[red]"} p-[0.875rem] w-[fit-content] font-bold`}>همه</li>
-            <li onClick={() => setTab('active')} className={`${tab == "active" && "border-b-[1px] border-[red]"} p-[0.875rem] w-[fit-content] font-bold`}>آگهی‌های فعال</li>
-            <li onClick={() => setTab('not-active')} className={`${tab == "not-active" && "border-b-[1px] border-[red]"} p-[0.875rem] w-[fit-content] font-bold`}>آگهی‌های غیر فعال</li>
+            <li onClick={() => setTab('all')} className={`${(tab == null || tab == 'all') && "border-b-[1px] border-[red] font-bold"} p-[0.875rem] whitespace-nowrap`}>همه‌ی آگهی‌ها</li>
+            <li onClick={() => setTab('active')} className={`${tab == "active" && "border-b-[1px] border-[red] font-bold"} p-[0.875rem] whitespace-nowrap`}>آگهی‌های فعال</li>
+            <li onClick={() => setTab('not-active')} className={`${tab == "not-active" && "border-b-[1px] border-[red] font-bold"} p-[0.875rem] whitespace-nowrap`}>آگهی‌های غیرفعال</li>
         </ul>
     )
 }

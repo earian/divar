@@ -19,3 +19,13 @@ export async function GET(req: NextRequest, { params } : { params : Promise<{ cr
     }
     return NextResponse.json({ success: false })
 }
+
+interface ResponseType
+{
+    isLoggedIn: true | false,
+    isOwner?: true | false,
+    info?: {
+        phone: string,
+        email: string,
+    }
+} 
