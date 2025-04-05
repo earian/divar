@@ -61,7 +61,7 @@ export default function Page(){
                     <p>{ post.description }</p>
                 </section>
             }
-                <Bottom creator={post.creator}/>
+                <Bottom postId={post.postId}/>
         </div>
     )
 }

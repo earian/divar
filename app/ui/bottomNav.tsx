@@ -6,26 +6,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const disabledPaths = ['/create','/p/'];
+const enablePaths = ['/','/user'];
 
 export default function BottomNav(){
     const pathname = usePathname();
-    console.log('pathname: ',pathname)
-    const isDisabled = disabledPaths.some((path)=> pathname.startsWith(path));
-    if(isDisabled) return 
-    const [activeIndex, setActiveIndex] = useState< 0 | 1 | 2 | 3 | 4 >();
+    const isEnable = enablePaths.some((path) => pathname === path);
+    if(!isEnable) return 
+    //Temporary solution for SSR and CSR missmatch.
+    const [isClient, setIsClient] = useState(false);
     useEffect(()=>{
-        switch(pathname){
-            case '/':
-                setActiveIndex(0);
-                break;
-            case '/user':
-                setActiveIndex(4);
-                break;
-            default:
-                setActiveIndex(undefined)
-                break;
-        }
-    },[pathname])
+        setIsClient(true)
+    },[])
 
     return (
         <div className="fixed left-0 bottom-[-5px] w-full h-[4rem] flex flex-row items-center bg-[#333] min-h-[0] z-[300]">
@@ -33,35 +24,35 @@ export default function BottomNav(){
             href={'/'}
             className="size-full"
             >
-            <BottomNavItem icon={NewspaperIcon} title='آگهی‌ها' isActive={activeIndex == 0}/>
+            <BottomNavItem icon={NewspaperIcon} title='آگهی‌ها' isActive={isClient && pathname === '/'}/>
             </Link>
             
             <Link 
             href={'#'}
             className="size-full"
             >
-            <BottomNavItem icon={BookmarkIcon} title='نشان‌ها' isActive={activeIndex == 1}/>
+            <BottomNavItem icon={BookmarkIcon} title='نشان‌ها' isActive={false}/>
             </Link>
 
             <Link 
             href={'/create'}
             className="size-full"
             >
-            <BottomNavItem icon={PlusCircleIcon} title='ثبت آگهی' isActive={activeIndex == 2}/>
+            <BottomNavItem icon={PlusCircleIcon} title='ثبت آگهی' isActive={false}/>
             </Link>
             
             <Link 
             href={'#'}
             className="size-full"
             >
-            <BottomNavItem icon={ChatBubbleLeftRightIcon} title='چت' isActive={activeIndex == 3}/>
+            <BottomNavItem icon={ChatBubbleLeftRightIcon} title='چت' isActive={false}/>
             </Link>
 
             <Link
             href={'/user'}
             className="size-full"
             >
-            <BottomNavItem icon={UserCircleIcon} title='دیوار من' isActive={activeIndex == 4}/>
+            <BottomNavItem icon={UserCircleIcon} title='دیوار من' isActive={isClient && pathname === '/user'}/>
             </Link>
         </div>
     )

@@ -109,7 +109,7 @@ export async function togglePostActivation(id: string){
     }
 }
 
-export async function deletePostById(id: string, imgSrc: string){
+export async function deletePostById(id: string | null, imgSrc?: string){
     try{
         await sql`DELETE FROM posts WHERE "postId" = ${id}`;
         if(imgSrc && imgSrc != '/') await del(imgSrc);
