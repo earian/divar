@@ -6,10 +6,11 @@ import { deletePostById } from "@/app/lib/actions";
 
 export default function Bottom(props: {
     postId: string | null,
+    deleteConfirmation: Function,
+    contactInfo: Function,
+    showLogin: Function,
 }){
-    const [state, setState] = useState< state | undefined >(undefined);
-    let buttonVals = ['چت','اطلاعات تماس'];
-    //if(userState) buttonVals = ['ویرایش','حذف آگهی'];
+    const [state, setState] = useState< State | undefined >(undefined);
     
     useEffect(()=>{
         async function getOwner(){
@@ -32,33 +33,28 @@ export default function Bottom(props: {
     return (
         <div
         className="fixed w-full flex flex-row justify-around bg-[#333] bottom-0 left-0 py-[0.525rem]"
-        >
+        >   
             {state?.userState == 'owner' &&
             <>
                 <Button value='ویرایش' action={()=> alert('Editing')}/>
-                <Button value='حذف آگهی' action={()=> deletePostById(props.postId)}/>
+                <Button value='حذف آگهی' action={()=> props.deleteConfirmation(true)}/>
             </>
             }
             {state?.userState == 'user' &&
             <>
                 <Button value='چت' action={()=> alert('Chatting!')}/>
-                <Button value='اطلاعات تماس' action={()=> alert(`email: ${state.info?.email}, phone: ${state.info?.phone}`)}/>
+                <Button value='اطلاعات تماس' action={()=> props.contactInfo(state.info)}/>
             </>
             }
             {state?.userState == 'unknown' &&
             <>
-                <Button value='چت' action={()=> alert('Login First!')}/>
-                <Button value='اطلاعات تماس' action={()=> alert('Login First!')}/>
+                <Button value='چت' action={()=> props.showLogin(true)}/>
+                <Button value='اطلاعات تماس' action={()=> props.showLogin(true)}/>
             </>
             }
         </div>
     )
 }
-
-interface state {
-    userState: 'owner' | 'user' | 'unknown',
-    info?: {
-        email: string,
-        phone: string,
-    }
-}
+type State = 
+{ userState: 'owner' | 'unknown' } |
+{ userState: 'user', info: { email: string, phone: string }}

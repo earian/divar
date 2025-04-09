@@ -8,11 +8,17 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Load from "./loading";
 import { Post } from "@/app/lib/definitions";
+import Confirmation from "@/app/ui/posts/pop-ups/delete-confirmation";
+import Contact from "@/app/ui/posts/pop-ups/owner-info";
+import LoginModal from "@/app/ui/modals/login";
 
 
 export default function Page(){
     const { id } = useParams();
     const [post, setPost] = useState< Post | undefined >();
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState< boolean >(false);
+    const [contactInfo, setContactInfo] = useState< { email: string, phone: string } | false >(false);
+    const [showLogin, setShowLogin] = useState< boolean >(false);
     
     useEffect(()=>{
         async function getPost(){
@@ -38,6 +44,10 @@ export default function Page(){
         <div 
         className="mb-[8rem]"
         >
+            {/* Confirmation Pop-up for deleting the post */}
+            {showDeleteConfirmation && <Confirmation deleteConfirmation={setShowDeleteConfirmation}/>}
+            {contactInfo && <Contact info={contactInfo} setContactInfo={setContactInfo}/>}
+            {showLogin && <LoginModal />}
             <Header />
             <Images thumbnail={post.thumbnail}/>
             <Category value={post.category} />
@@ -61,7 +71,12 @@ export default function Page(){
                     <p>{ post.description }</p>
                 </section>
             }
-                <Bottom postId={post.postId}/>
+                <Bottom 
+                    postId={post.postId} 
+                    deleteConfirmation={setShowDeleteConfirmation} 
+                    contactInfo={setContactInfo}
+                    showLogin={setShowLogin}
+                    />
         </div>
     )
 }

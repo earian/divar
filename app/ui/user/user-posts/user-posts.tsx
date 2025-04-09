@@ -53,8 +53,6 @@ function reducer(posts: { postId: string, thumbnail: string, title: string, isAc
     }
 }
 
-interface actionType {
-    type: string,
-    post?: { postId: string, thumbnail: string, title: string, isActive: boolean },
-    postId?: string,
-}
+type actionType =
+ { type: 'delete', postId: string,} | 
+ { type: 'activation', post: { postId: string, thumbnail: string, title: string, isActive: boolean } }

@@ -4,8 +4,8 @@ import { fetchPost, fetchUserById } from "@/app/lib/data";
 
 
 export async function GET(req: NextRequest, { params } : { params : Promise<{ slug: string }> }){
-    const { slug : creatorId } = await params;
-    const [userId, post] = await Promise.all([whois(), fetchPost(creatorId)]);
+    const { slug : postId } = await params;
+    const [userId, post] = await Promise.all([whois(), fetchPost(postId)]);
     console.log('user id: ', userId);
     console.log('post: ', post);
     if(!userId) {
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, { params } : { params : Promise<{ sl
     }
     if(userId != post.creator){
         const owner = await fetchUserById(post.creator);
-        return NextResponse.json({ info: { email: owner.email, phone: '+989121111111' }} as ResponseType);
+        return NextResponse.json({ info: { email: owner.email, phone: '+98 9121111111' }} as ResponseType);
     }
 }
 
