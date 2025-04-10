@@ -8,7 +8,7 @@ import { del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { CreateSession, whois } from "./session";
 
-export async function authenticate(state: FormState, formData: FormData){
+export async function authenticate(state: FormState | null, formData: FormData){
         const validatedFields = LoginFormSchema.safeParse({
             email: formData.get('email'),
             password: formData.get('password'),

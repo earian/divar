@@ -7,6 +7,9 @@ export const LoginFormSchema = z.object({
         .min(6, {message: 'پسورد باید ۶ کاراکتر یا بیشتر باشد.'})
 })
 
+export const EmailSchema = z.string().email({ message: 'لطفا یک ایمیل معتبر وارد کنید.' });
+export const PasswordSchema = z.string().min(6, { message: 'پسورد باید ۶ کاراکتر یا بیشتر باشد.' });
+
 export type FormState = {
     errors?: {
         email?: string[],

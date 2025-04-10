@@ -47,7 +47,7 @@ export default function Page(){
             {/* Confirmation Pop-up for deleting the post */}
             {showDeleteConfirmation && <Confirmation deleteConfirmation={setShowDeleteConfirmation}/>}
             {contactInfo && <Contact info={contactInfo} setContactInfo={setContactInfo}/>}
-            {showLogin && <LoginModal />}
+            {showLogin && <LoginModal showModal={setShowLogin}/>}
             <Header />
             <Images thumbnail={post.thumbnail}/>
             <Category value={post.category} />

@@ -1,62 +1,118 @@
 'use client';
-// import Button from "../div-button";
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Button from "../posts/button";
+import { EmailSchema,PasswordSchema } from "@/app/lib/definitions";
+import { authenticate } from "@/app/lib/actions";
 
-export default function LoginModal(){
+export default function LoginModal(props: {
+    showModal: Function,
+}){
+    const [showForm, setShowFrom] = useState(false);
     const [step, setStep] = useState< number >(0);
-    console.log(step)
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [errors, setErrors] = useState< Errors | undefined >();
+    const [pending, startTransition] = useTransition();
+
+
+    useEffect(()=>{
+        const id = setTimeout(()=>{
+            document.body.style.overflow = 'hidden';
+            setShowFrom(true);
+        },20)
+        return ()=> clearTimeout(id)
+    },[])
 
     function cancel(){
-        console.log('canceled')
+        document.body.style.overflow = 'auto';
+        props.showModal(false);
     }
-    function next(e?: Event){
-        // const element = document.querySelector('#login-modal-wrapper-div1') as HTMLDivElement;
-        // const container = document.querySelector('#login-modal-wrapper-div') as HTMLDivElement;
-        // const width = container.offsetWidth;
-        // element.style.transform = `translateX(${width}px)`;
-        console.log('Next fn ran.')
-        setStep(step + 1)
 
+    function next(e?: Event){
+        if(step == 0) setStep(step + 1)
+        if(step == 1){
+            const validation = EmailSchema.safeParse(email);
+            if(!validation.success){
+                const errMessage = validation.error.flatten().formErrors[0];
+                setErrors({ email: errMessage });
+                return
+            }
+            setErrors(undefined);
+            setStep(step + 1);
+        } else if(step == 2){
+            const validation = PasswordSchema.safeParse(password);
+            if(!validation.success){
+                const errMessage = validation.error.flatten().formErrors[0];
+                setErrors({ password: errMessage });
+                return
+            }
+            setErrors(undefined);
+            //send data to backend and show a ui
+            console.log('data sent to backend');
+            startTransition(async () => {
+                const formData = new FormData();
+                formData.set('email', email);
+                formData.set('password', password);
+                const res = await authenticate(null ,formData);
+                if(res == undefined) alert("Loggedin successfully!");
+                console.log('Login Failed!', res)
+            })
+        }
+        // console.log('Next fn ran.')
+        // setStep(step + 1)
     }
+
     function back(e: Event){
         setStep(step - 1);
     }
 
     return (
         <div
-        className="fixed size-full bg-[gray] z-[2000] flex justify-center items-center"
+        className="fixed size-full backdrop-blur-sm z-[2000] flex justify-center items-center"
+        onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>)=> {
+            if(e.target == e.currentTarget) cancel()
+        }}
         >
             <article
-            className="bg-[#333] w-[70%] p-[0.450rem]"
+            className={`bg-[#333] w-[70%] p-[0.450rem] rounded-sm transition-opacity duration-[0.5s] ease-in ${showForm ? 'opacity-[1]' : ' opacity-[0]'}`}
             >
 
                 <h2 className="mx-auto w-[fit-content] py-[0.675rem] border-b-[1px] border-[gray]">ورود به حساب کاربری</h2>
 
             
             <div 
-            className="relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] h-[119px]"
+            className={`relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] ${step == 0 ? `h-[91px]` : `h-[120px]`} ${errors && 'h-[150px]'} transition-height duration-[0.2s] ease-linear`}
             id="login-modal-wrapper-div"
             >
                 <div 
-                className={`w-full shrink-[0] absolute ${step == 0 ? 'left-[0]' : 'left-[100%]'}`}
-                id="login-modal-wrapper-div1"
+                className={`w-full shrink-[0] absolute ${step == 0 ? 'left-[0]' : 'left-[100%]'} transition-left duration-[0.8s] ease-in-out`}
                 >
                     <p>برای استفاده از تمام امکانات وارد حساب خود شوید.</p>
                     <div className="mt-[1rem] flex flex-row justify-around">
-                        <Button value="انصراف" action={back}/>
+                        <Button value="انصراف" action={cancel}/>
                         <Button value="ادامه"  action={next}/>
                     </div>
                 </div>
                     
                 <form 
-                className={`flex flex-row w-full shrink-0 flex-nowrap absolute ${step == 0 && 'left-[-100%]'} ${step == 1 && 'left-[0]'} ${step == 2 && 'left-[100%]'}`}
-                action="">
+                className={`flex flex-row w-full shrink-0 flex-nowrap absolute ${step == 0 && 'left-[-100%]'} ${step == 1 && 'left-[0]'} ${step == 2 && 'left-[100%]'} transition-left duration-[0.8s] ease-in-out`}
+                >
                     <div
                     className="w-full shrink-0"
                     >
-                        <label htmlFor="email">ایمیل</label>
-                        <input type="email" name="email" className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[gray]" dir="ltr" placeholder="user@mail.com"/>
+                        <label htmlFor="email" className="mr-[0.5rem]">ایمیل</label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setEmail(e.currentTarget.value)} 
+                            value={email} 
+                            className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[gray]" 
+                            dir="ltr" 
+                            placeholder="user@mail.com"
+                            />
+                            {errors?.email && <div className="pr-[0.5rem] mt-[0.345rem]">{errors.email}</div>}
+                            
+                            
                             <div className="mt-[1rem] flex flex-row justify-around">
                                 <Button value='مرحله‌ی قبل' action={back}/>
                                 <Button value='بعدی' action={next}/>
@@ -66,8 +122,16 @@ export default function LoginModal(){
                     <div
                     className="w-full shrink-0"
                     >
-                        <label htmlFor="password">رمز عبور</label>
-                        <input type="password" name="password" className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[gray]" dir="ltr"/>
+                        <label htmlFor="password" className="mr-[0.5rem]">رمز عبور</label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setPassword(e.currentTarget.value)} 
+                            value={password} 
+                            className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[gray]" 
+                            dir="ltr"
+                            />
+                        {errors?.password && <div className="pr-[0.5rem] mt-[0.345rem]">{errors.password}</div>}
                             <div className="mt-[1rem] flex flex-row justify-around">
                                 <Button value='مرحله‌ی قبل' action={back}/>
                                 <Button value='تایید' action={next}/>
@@ -81,4 +145,8 @@ export default function LoginModal(){
             </article>
         </div>
     )
+}
+interface Errors {
+    email?: string,
+    password?: string,
 }
