@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, useTransition } from "react";
 import Button from "../posts/button";
-import { EmailSchema,PasswordSchema } from "@/app/lib/definitions";
+import { EmailSchema ,PasswordSchema } from "@/app/lib/definitions";
 import { authenticate } from "@/app/lib/actions";
 
 export default function LoginModal(props: {
@@ -54,12 +54,15 @@ export default function LoginModal(props: {
                 formData.set('email', email);
                 formData.set('password', password);
                 const res = await authenticate(null ,formData);
-                if(res == undefined) alert("Loggedin successfully!");
-                console.log('Login Failed!', res)
+                if(res == undefined) {
+                    console.log('logged in')
+                    cancel();
+                    window.location.reload();
+                }else {
+                    console.log('Login Failed!', res)
+                }
             })
         }
-        // console.log('Next fn ran.')
-        // setStep(step + 1)
     }
 
     function back(e: Event){

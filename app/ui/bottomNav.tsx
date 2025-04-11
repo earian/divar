@@ -11,12 +11,14 @@ const enablePaths = ['/','/user'];
 export default function BottomNav(){
     const pathname = usePathname();
     const isEnable = enablePaths.some((path) => pathname === path);
-    if(!isEnable) return 
+    
     //Temporary solution for SSR and CSR missmatch.
     const [isClient, setIsClient] = useState(false);
     useEffect(()=>{
         setIsClient(true)
     },[])
+    
+    if(!isEnable) return 
 
     return (
         <div className="fixed left-0 bottom-[-5px] w-full h-[4rem] flex flex-row items-center bg-[#333] min-h-[0] z-[300]">

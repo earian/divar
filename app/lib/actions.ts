@@ -31,7 +31,6 @@ export async function authenticate(state: FormState | null, formData: FormData){
         if(passwordMatch) {
             //the user is validated
             await CreateSession(user.rows[0].id);
-            redirect('/');
         }
 }
 
