@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useActionState } from "react";
 import Button from "../posts/button";
 import { EmailSchema ,PasswordSchema } from "@/app/lib/definitions";
 import { authenticate } from "@/app/lib/actions";
@@ -13,6 +13,7 @@ export default function LoginModal(props: {
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState< Errors | undefined >();
     const [pending, startTransition] = useTransition();
+    const [state, formAction] = useActionState(authenticate, undefined);
 
 
     useEffect(()=>{
@@ -39,34 +40,36 @@ export default function LoginModal(props: {
             }
             setErrors(undefined);
             setStep(step + 1);
-        } else if(step == 2){
-            const validation = PasswordSchema.safeParse(password);
+        } 
+    }
+
+    function back(e: Event){
+        setStep(step - 1);
+    }
+
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>){
+        e.preventDefault();
+
+        const formData = new FormData(e.currentTarget);
+        console.log(formData.keys())
+        const password = formData.get('password');
+        const validation = PasswordSchema.safeParse(password);
             if(!validation.success){
                 const errMessage = validation.error.flatten().formErrors[0];
                 setErrors({ password: errMessage });
                 return
             }
             setErrors(undefined);
-            //send data to backend and show a ui
-            console.log('data sent to backend');
-            startTransition(async () => {
-                const formData = new FormData();
-                formData.set('email', email);
-                formData.set('password', password);
-                const res = await authenticate(null ,formData);
-                if(res == undefined) {
-                    console.log('logged in')
-                    cancel();
-                    window.location.reload();
-                }else {
-                    console.log('Login Failed!', res)
-                }
+            console.log('Form Submitted.')
+            startTransition(()=>{
+                formAction(formData);
             })
-        }
     }
-
-    function back(e: Event){
-        setStep(step - 1);
+    if(state?.success) {
+        document.body.style.overflow = 'auto';
+        window.location.reload();
+        console.log('Authenticated Successfully!')
+        return
     }
 
     return (
@@ -77,14 +80,14 @@ export default function LoginModal(props: {
         }}
         >
             <article
-            className={`bg-[#333] w-[70%] p-[0.450rem] rounded-sm transition-opacity duration-[0.5s] ease-in ${showForm ? 'opacity-[1]' : ' opacity-[0]'}`}
+            className={`bg-[#1e1e1e] w-[70%] p-[0.450rem] rounded-sm transition-opacity duration-[0.5s] ease-in ${showForm ? 'opacity-[1]' : ' opacity-[0]'}`}
             >
 
                 <h2 className="mx-auto w-[fit-content] py-[0.675rem] border-b-[1px] border-[gray]">ورود به حساب کاربری</h2>
 
             
             <div 
-            className={`relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] ${step == 0 ? `h-[91px]` : `h-[120px]`} ${errors && 'h-[150px]'} transition-height duration-[0.2s] ease-linear`}
+            className={`relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] ${step == 0 ? `h-[91px]` : `h-[120px]`} ${(errors || state?.message) && 'h-[150px]'} transition-height duration-[0.2s] ease-linear`}
             id="login-modal-wrapper-div"
             >
                 <div 
@@ -98,22 +101,28 @@ export default function LoginModal(props: {
                 </div>
                     
                 <form 
+                onSubmit={handleSubmit}
                 className={`flex flex-row w-full shrink-0 flex-nowrap absolute ${step == 0 && 'left-[-100%]'} ${step == 1 && 'left-[0]'} ${step == 2 && 'left-[100%]'} transition-left duration-[0.8s] ease-in-out`}
                 >
                     <div
                     className="w-full shrink-0"
                     >
-                        <label htmlFor="email" className="mr-[0.5rem]">ایمیل</label>
+                        <label htmlFor="email" className="mr-[0.5rem] font-bold">ایمیل</label>
                         <input 
                             type="email" 
                             name="email" 
                             onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setEmail(e.currentTarget.value)} 
                             value={email} 
-                            className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[gray]" 
+                            className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[#2a2a2a] rounded-lg text-[#e4e4e7] 
+                            border border-zinc-700
+                            focus:outline-none
+                            focus:ring-2 focus:ring-rose-500
+                            focus:ring-offset-2 focus:ring-offset-zinc-900
+                            transition" 
                             dir="ltr" 
-                            placeholder="user@mail.com"
+                            placeholder="e.g. user@mail.com"
                             />
-                            {errors?.email && <div className="pr-[0.5rem] mt-[0.345rem]">{errors.email}</div>}
+                            {errors?.email && <div className="pr-[0.5rem] mt-[0.345rem] text-[#f43f5e]">{errors.email}</div>}
                             
                             
                             <div className="mt-[1rem] flex flex-row justify-around">
@@ -131,13 +140,24 @@ export default function LoginModal(props: {
                             name="password" 
                             onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setPassword(e.currentTarget.value)} 
                             value={password} 
-                            className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[gray]" 
+                            className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[#2a2a2a] rounded-lg text-[#e4e4e7] 
+                            border border-zinc-700
+                            focus:outline-none
+                            focus:ring-2 focus:ring-rose-500
+                            focus:ring-offset-2 focus:ring-offset-zinc-900
+                            transition" 
                             dir="ltr"
+                            disabled={pending}
                             />
-                        {errors?.password && <div className="pr-[0.5rem] mt-[0.345rem]">{errors.password}</div>}
+                        {errors?.password && <div className="pr-[0.5rem] mt-[0.345rem] text-[#f43f5e]">{errors.password}</div>}
+                        {state?.message && <div className="pr-[0.5rem] mt-[0.345rem]">{state.message}</div>}
                             <div className="mt-[1rem] flex flex-row justify-around">
-                                <Button value='مرحله‌ی قبل' action={back}/>
-                                <Button value='تایید' action={next}/>
+                                <Button value='مرحله‌ی قبل' action={back} disabled={pending}/>
+                                <button 
+                                    type="submit"
+                                    className="rounded-md border-[2px] border-[#333] py-[0.575rem] w-[45%] bg-[#d14757] text-[#242424] text-[1rem] font-bold"
+                                    disabled={pending}
+                                    >{pending ? 'در حال بررسی...' : 'تایید' }</button>
                             </div>
                     </div>
                 

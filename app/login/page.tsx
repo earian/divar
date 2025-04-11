@@ -1,10 +1,13 @@
 'use client'
+import { redirect } from "next/navigation";
 import { authenticate } from "../lib/actions";
 import { rubik } from "../ui/fonts";
 import { useActionState } from "react";
 
 export default function LoginPage(){
     const [state, action, pending] = useActionState(authenticate, undefined);
+
+    if(state?.success) redirect('/user')
 
     return (
         <form className={`${rubik.className} p-[0.965rem]`} action={action}>
