@@ -45,7 +45,7 @@ export default function Page(){
         className="mb-[8rem]"
         >
             {/* Confirmation Pop-up for deleting the post */}
-            {showDeleteConfirmation && <Confirmation deleteConfirmation={setShowDeleteConfirmation}/>}
+            {showDeleteConfirmation && <Confirmation deleteConfirmation={setShowDeleteConfirmation} postId={post.postId}/>}
             {contactInfo && <Contact info={contactInfo} setContactInfo={setContactInfo}/>}
             {showLogin && <LoginModal showModal={setShowLogin}/>}
             <Header />

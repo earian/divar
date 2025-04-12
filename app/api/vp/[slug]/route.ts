@@ -6,8 +6,6 @@ import { fetchPost, fetchUserById } from "@/app/lib/data";
 export async function GET(req: NextRequest, { params } : { params : Promise<{ slug: string }> }){
     const { slug : postId } = await params;
     const [userId, post] = await Promise.all([whois(), fetchPost(postId)]);
-    console.log('user id: ', userId);
-    console.log('post: ', post);
     if(!userId) {
         console.log('No user is logged in.');
         return NextResponse.json({ isLoggedIn: false } as ResponseType);

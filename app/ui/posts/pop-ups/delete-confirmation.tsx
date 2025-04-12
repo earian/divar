@@ -1,8 +1,10 @@
 'use client';
 import Button from "../button";
+import { deletePostById } from "@/app/lib/actions";
 
 export default function Confirmation(props: {
     deleteConfirmation: Function,
+    postId: string,
 }){
     document.body.style.overflow = 'hidden';
 
@@ -11,9 +13,10 @@ export default function Confirmation(props: {
         props.deleteConfirmation(false);
     }
 
-    function deletePost(e?: Event){
+    async function deletePost(e?: Event){
         console.log('Post deletion confirmed.');
-        console.log(e);
+        const res = await deletePostById(props.postId);
+        if(res) window.location.href = '/';
     }
 
     return (
