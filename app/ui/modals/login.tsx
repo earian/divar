@@ -38,7 +38,7 @@ export default function LoginModal(props: {
                 setErrors({ email: errMessage });
                 return
             }
-            setErrors(undefined);
+            if(errors?.email) setErrors(undefined);
             setStep(step + 1);
         } 
     }
@@ -87,16 +87,16 @@ export default function LoginModal(props: {
 
             
             <div 
-            className={`relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] ${step == 0 ? `h-[91px]` : `h-[120px]`} ${(errors || state?.message) && 'h-[150px]'} transition-height duration-[0.2s] ease-linear`}
+            className={`relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] ${step == 0 ? 'h-[95px]' : 'h-[120px]'} ${(errors || state?.message) && 'h-[150px]'} transition-height duration-[0.2s] ease-linear`}
             id="login-modal-wrapper-div"
             >
                 <div 
-                className={`w-full shrink-[0] absolute ${step == 0 ? 'left-[0]' : 'left-[100%]'} transition-left duration-[0.8s] ease-in-out`}
+                className={`flex flex-col justify-between size-full shrink-[0] absolute ${step == 0 ? 'left-[0]' : 'left-[100%]'} transition-left duration-[0.8s] ease-in-out`}
                 >
                     <p>برای استفاده از تمام امکانات وارد حساب خود شوید.</p>
-                    <div className="mt-[1rem] flex flex-row justify-around">
-                        <Button value="انصراف" action={cancel}/>
-                        <Button value="ادامه"  action={next}/>
+                    <div className="flex flex-row justify-around">
+                        <Button value="انصراف" action={cancel} tabIndex={step == 0 ? 0 : -1}/>
+                        <Button value="ادامه"  action={next} tabIndex={step == 0 ? 0 : -1}/>
                     </div>
                 </div>
                     
@@ -121,13 +121,14 @@ export default function LoginModal(props: {
                             transition" 
                             dir="ltr" 
                             placeholder="e.g. user@mail.com"
+                            tabIndex={step == 1 ? 0 : -1}
                             />
                             {errors?.email && <div className="pr-[0.5rem] mt-[0.345rem] text-[#f43f5e]">{errors.email}</div>}
                             
                             
                             <div className="mt-[1rem] flex flex-row justify-around">
-                                <Button value='مرحله‌ی قبل' action={back}/>
-                                <Button value='بعدی' action={next}/>
+                                <Button value='مرحله‌ی قبل' action={back} tabIndex={step == 1 ? 0 : -1}/>
+                                <Button value='بعدی' action={next} tabIndex={step == 1 ? 0 : -1}/>
                             </div>
                     </div>
 
@@ -148,15 +149,17 @@ export default function LoginModal(props: {
                             transition" 
                             dir="ltr"
                             disabled={pending}
+                            tabIndex={step == 2 ? 0 : -1}
                             />
                         {errors?.password && <div className="pr-[0.5rem] mt-[0.345rem] text-[#f43f5e]">{errors.password}</div>}
                         {state?.message && <div className="pr-[0.5rem] mt-[0.345rem]">{state.message}</div>}
                             <div className="mt-[1rem] flex flex-row justify-around">
-                                <Button value='مرحله‌ی قبل' action={back} disabled={pending}/>
+                                <Button value='مرحله‌ی قبل' action={back} disabled={pending} tabIndex={step == 2 ? 0 : -1}/>
                                 <button 
                                     type="submit"
                                     className="rounded-md border-[2px] border-[#333] py-[0.575rem] w-[45%] bg-[#d14757] text-[#242424] text-[1rem] font-bold"
                                     disabled={pending}
+                                    tabIndex={step == 2 ? 0 : -1}
                                     >{pending ? 'در حال بررسی...' : 'تایید' }</button>
                             </div>
                     </div>

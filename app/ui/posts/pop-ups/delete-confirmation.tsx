@@ -1,4 +1,5 @@
 'use client';
+import { useTransition } from "react";
 import Button from "../button";
 import { deletePostById } from "@/app/lib/actions";
 
@@ -7,6 +8,7 @@ export default function Confirmation(props: {
     postId: string,
 }){
     document.body.style.overflow = 'hidden';
+    const [isPending, startTransition] = useTransition();
 
     function cancel(){
         document.body.style.overflow = 'auto';
@@ -15,8 +17,10 @@ export default function Confirmation(props: {
 
     async function deletePost(e?: Event){
         console.log('Post deletion confirmed.');
-        const res = await deletePostById(props.postId);
-        if(res) window.location.href = '/';
+        startTransition(async ()=>{
+            const res = await deletePostById(props.postId);
+            if(res) window.location.href = '/';
+        })
     }
 
     return (
@@ -35,8 +39,8 @@ export default function Confirmation(props: {
                 <div
                 className="flex flex-row justify-around mt-[2rem]"
                 >
-                    <Button value="خیر" action={cancel}/>
-                    <Button value="بله" action={deletePost}/>
+                    <Button value="خیر" action={cancel} disabled={isPending}/>
+                    <Button value={isPending ? '...' : 'بله' } action={deletePost} disabled={isPending}/>
                 </div>
             </article>
         </div>
