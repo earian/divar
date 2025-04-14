@@ -87,7 +87,7 @@ export default function LoginModal(props: {
 
             
             <div 
-            className={`relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] ${step == 0 ? 'h-[95px]' : 'h-[120px]'} ${(errors || state?.message) && 'h-[150px]'} transition-height duration-[0.2s] ease-linear`}
+            className={`relative flex flex-row flex-nowrap overflow-hidden mt-[1.2rem] ${step == 0 ? 'h-[95px]' : 'h-[120px]'} ${(errors || state?.message) && !pending && 'h-[150px]'} transition-height duration-[0.2s] ease-linear`}
             id="login-modal-wrapper-div"
             >
                 <div 
@@ -112,6 +112,12 @@ export default function LoginModal(props: {
                             type="email" 
                             name="email" 
                             onChange={(e: React.ChangeEvent<HTMLInputElement>)=> setEmail(e.currentTarget.value)} 
+                            onKeyDown={(e: React.KeyboardEvent)=> {
+                                if(e.key == 'Enter') {
+                                    e.preventDefault();
+                                    next()
+                                }
+                            }}
                             value={email} 
                             className="block w-[95%] px-[0.425rem] py-[0.235rem] mx-auto h-[2rem] bg-[#2a2a2a] rounded-lg text-[#e4e4e7] 
                             border border-zinc-700
@@ -152,7 +158,7 @@ export default function LoginModal(props: {
                             tabIndex={step == 2 ? 0 : -1}
                             />
                         {errors?.password && <div className="pr-[0.5rem] mt-[0.345rem] text-[#f43f5e]">{errors.password}</div>}
-                        {state?.message && <div className="pr-[0.5rem] mt-[0.345rem]">{state.message}</div>}
+                        {(!errors?.password && !pending && state?.message) && <div className="pr-[0.5rem] mt-[0.345rem]">{state.message}</div>}
                             <div className="mt-[1rem] flex flex-row justify-around">
                                 <Button value='مرحله‌ی قبل' action={back} disabled={pending} tabIndex={step == 2 ? 0 : -1}/>
                                 <button 
