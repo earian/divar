@@ -22,6 +22,11 @@ export type FormState = {
     }
 } | undefined;
 
+const MAX_SIZE = 4 * 1024 * 1024;//4 MB
+
+export const ImageSchema = z.instanceof(File, { message: 'فایل معتبر نیست.' })
+                    .refine((file)=> file.size <= MAX_SIZE, { message: 'فایل انتخابی باید کمتر از ۵MB باشد.'})
+
 export const CreatePostFormSchema = z.object({
     category: z.string({ message: 'لطفا دسته بندی خود را انتخاب کنید.' }),
     title: z

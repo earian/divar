@@ -37,6 +37,7 @@ export async function authenticate(state: FormState | null, formData: FormData){
 
 
 export async function createPost(prevState: CreateFormState, formData: FormData){
+    console.log('Create Post function ran!🎈');
     const validatedFields = CreatePostFormSchema.safeParse({
         category: formData.get('category'),
         title: formData.get('title'),

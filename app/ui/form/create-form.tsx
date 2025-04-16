@@ -1,20 +1,38 @@
 'use client'
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, useRef } from "react";
 import { createPost } from "@/app/lib/actions";
 import { QueryResultRow } from "@vercel/postgres";
+import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 
 export default function Form(props: {
     categories: QueryResultRow[];
 }){
     const [state, formAction, isPending] = useActionState(createPost, undefined);
     const [category, setCategory] = useState({ name: 'select' });
+    const hiddenInputRef = useRef(null);
+    const [imageFiles, setImageFiles] = useState< File[] >([]);
+    
     useEffect(()=>{
         if(state) setCategory({ name: state.values.category });
     },[state])
 
+    function handleImageChange(e: React.ChangeEvent<HTMLInputElement>){
+        console.log('working')
+        if(e.currentTarget.files && e.currentTarget.files[0] && e.currentTarget.files[0].size) {
+            setImageFiles([...imageFiles, e.currentTarget.files[0]]);
+        }
+    }
+    
+    function onSubmit(e: React.FormEvent){
+        e.preventDefault();
+
+        //validate form fields
+
+    }
+
 
     return (
-        <form action={formAction}>
+        <form onSubmit={onSubmit}>
             <label htmlFor="category">دسته‌ی آگهی</label>
                 <select name="category" 
                         value={ category.name } 
@@ -48,12 +66,37 @@ export default function Form(props: {
             </textarea>
             <label htmlFor="images">عکس‌ خود را بارگزاری کنید:</label>
             <input 
+                ref={hiddenInputRef}
                 type="file" 
-                name="image" 
-                accept="image/webp, image/png, image/jpeg" 
-                className="my-[0.875rem]"
+                name="image"
+                className="hidden"
+                multiple
                 />
-            {/* {img?.src && <Image src={img.src} width={50} height={50} alt='Your prod image'/>} */}
+            
+            <input 
+                type="file" 
+                id="image-uploader" 
+                className="hidden" 
+                accept="image/webp, image/png, image/jpeg"
+                onChange={handleImageChange} 
+                disabled={imageFiles.length == 4}
+                />
+            <label 
+                htmlFor="image-uploader"
+                className="block my-[0.875rem]"
+                >
+                <CloudArrowUpIcon className="size-8"/>
+            </label>
+            <div
+            className="flex flex-row flex-nowrap justify-around"
+            >
+                <span className="w-[20%] aspect-square border border-dotted boder-[white]">{imageFiles[0] && <img src={URL.createObjectURL(imageFiles[0])} className="size-full"/>}</span>
+                <span className="w-[20%] aspect-square border border-dotted boder-[white]">{imageFiles[1] && <img src={URL.createObjectURL(imageFiles[1])} className="size-full"/>}</span>
+                <span className="w-[20%] aspect-square border border-dotted boder-[white]">{imageFiles[2] && <img src={URL.createObjectURL(imageFiles[2])} className="size-full"/>}</span>
+                <span className="w-[20%] aspect-square border border-dotted boder-[white]">{imageFiles[3] && <img src={URL.createObjectURL(imageFiles[3])} className="size-full"/>}</span>
+            </div>
+            
+            
             <label htmlFor="price" className="block">قیمت:</label>
             <input 
                 type="number" 
