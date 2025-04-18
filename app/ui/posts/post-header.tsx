@@ -16,7 +16,7 @@ export default function Header(){
     return (
         <>
         <div 
-        className={`flex justify-between items-center px-[0.550rem] top-[0] sticky w-full font-[700] bg-[#333]`}
+        className={`flex justify-between items-center px-[0.550rem] top-[0] sticky w-full font-[700] bg-[#333] z-[1040]`}
         >
             <div 
             className="flex justify-center items-center size-[3rem] rounded-[50%] ml-[0.125rem]" 

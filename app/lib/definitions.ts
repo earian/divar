@@ -70,6 +70,7 @@ export type Post = {
     price: number,
     thumbnail: string,
     title: string,
+    gallery: string,
 }
 
 export type User = {

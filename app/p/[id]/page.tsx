@@ -49,7 +49,7 @@ export default function Page(){
             {contactInfo && <Contact info={contactInfo} setContactInfo={setContactInfo}/>}
             {showLogin && <LoginModal showModal={setShowLogin}/>}
             <Header />
-            <Images thumbnail={post.thumbnail}/>
+            <Images thumbnail={post.thumbnail} gallery={post.gallery}/>
             <Category value={post.category} />
             <h2
             className="block text-[1.6rem] font-bold mr-[0.850rem]"
