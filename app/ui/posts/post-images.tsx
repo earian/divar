@@ -16,6 +16,7 @@ export default function Images(props: {
     function goPrev(){
         setCurrentIndex((prev)=> prev - 1);
     }
+    if(!props.thumbnail) return
 
     return (
         <div

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Button from "./button";
 import { BottomLoader } from "./posts-skeletons";
 import { ResponseType } from "@/app/api/vp/[slug]/route";
-import { deletePostById } from "@/app/lib/actions";
 
 export default function Bottom(props: {
     postId: string | null,

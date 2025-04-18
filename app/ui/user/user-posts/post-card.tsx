@@ -41,7 +41,7 @@ export default function Post(props: {
         if(text == 'yes'){
             startDelete(async ()=> {
                 try{
-                    await deletePostById(props.post.postId, props.post.thumbnail);
+                    await deletePostById(props.post.postId);
                     props.dispatch({
                         type: 'delete',
                         postId: props.post.postId,

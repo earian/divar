@@ -120,15 +120,22 @@ export async function togglePostActivation(id: string){
     }
 }
 
-export async function deletePostById(id: string | null, imgSrc?: string){
+export async function deletePostById(id: string | null){
+    const imgLinks : string[] = [];
     try{
-        if(!imgSrc){
-            const data = await sql`SELECT thumbnail FROM posts WHERE "postId" = ${id}`
-            const img : string | null = data.rows[0].thumbnail;
-            if(img !== null) imgSrc = img;
-        }
+        const data = await sql`SELECT thumbnail, gallery FROM posts WHERE "postId" = ${id}`
+        const { thumbnail, gallery } = data.rows[0];
+        imgLinks.push(thumbnail);
+        const galleryArr = JSON.parse(gallery);
+        if(galleryArr) imgLinks.push(...galleryArr);
+
+        //deleting the row and looping through the image sources and deleting them from the blob storage
         await sql`DELETE FROM posts WHERE "postId" = ${id}`;
-        if(imgSrc && imgSrc != '/') await del(imgSrc);
+        if(imgLinks) {
+            for(const link of imgLinks){
+                await del(link);
+            }
+        }
         return 1;
     }catch(err){
         console.log(err);
