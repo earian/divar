@@ -7,8 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import { del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { CreateSession, whois } from "./session";
-import { join } from "path";
-import { writeFile } from "fs/promises";
 
 export async function authenticate(state: FormState | null, formData: FormData){
         const validatedFields = LoginFormSchema.safeParse({
@@ -66,49 +64,47 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     
     const {category, title, desc, price, district} = validatedFields.data;
     const imageFiles = formData.getAll('images') as File[];
-    console.log('Serverside imageFiles: ', imageFiles)
-    for(const file of imageFiles){
-        console.log('For loop started!')
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-        const path = join(process.cwd(),'/public', 'poster', file.name);
-        await writeFile(path, buffer);
-        console.log(`Open ${path} to see the uploaded file.`)
+    let gallery : string[] = [];//gallery will be the LINKS of the images, to show later in the posts page
+    const date = new Date().toISOString().split('T')[0];
+    const id = uuidv4();
+    try{
+        const creatorId = await whois();
+        if(imageFiles.length){
+            for(const file of imageFiles){
+                const blob = await put(`posts/${file.name}`, file, {
+                    access: 'public',
+                });
+                gallery.push(blob.url)
+            }
+        }
+        let query = `
+        INSERT INTO posts ("postId", title, description, price, category, date, district, creator
+        ${gallery.length ? ', thumbnail' : ''}${gallery.length > 1 ? ', gallery' : ''})
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8
+        ${gallery.length ? ', $9' : ''}${gallery.length > 1 ? ', $10' : ''})
+      `;
+    
+      let params = [id, title, desc, price, category, date, district, creatorId];
+      if (gallery.length) {
+        //push the thumbnail to the query params
+        params.push(gallery[0]);
+        
+        //if there is more than one image
+        if(gallery.length > 1){
+            //converting the rest of gallery array to string to insert it into my database
+            const stringedGallery = JSON.stringify(gallery.slice(1));
+            params.push(stringedGallery);
+        }
+      }
+    
+      // Execute query
+      await sql.query(query, params);    
+    }catch(err){
+        console.log(err)
+        throw new Error("Coudn't create the post.")
     }
-    return { message: 'Post Created Successfuly!🎉',
-             values: validatedFields.data   
-}
-    //const date = new Date().toISOString().split('T')[0];
-    //const id = uuidv4();
-    // try{
-    //     const creatorId = await whois();
-    //     let blob = null;
-    //     if(imageFile && imageFile.size !== 0){
-    //         blob = await put(`posts/${imageFile.name}`, imageFile, {
-    //             access: 'public',
-    //           });
-    //     }
-    //     let query = `
-    //     INSERT INTO posts ("postId", title, description, price, category, date, district, creator
-    //     ${blob ? ', thumbnail' : ''})
-    //     VALUES ($1, $2, $3, $4, $5, $6, $7, $8
-    //     ${blob ? ', $9' : ''})
-    //   `;
-    
-    //   let params = [id, title, desc, price, category, date, district, creatorId];
-    //   if (blob) {
-    //     params.push(blob.url);
-    //   }
-    
-    //   // Execute query
-    //   await sql.query(query, params);    
-    // }catch(err){
-    //     console.log(err)
-    //     throw new Error("Coudn't create the post.")
-    // }
-    // revalidatePath('/');
-    // redirect('/');
-
+    revalidatePath('/');
+    redirect('/');
 }
 
 export async function togglePostActivation(id: string){
