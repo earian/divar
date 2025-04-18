@@ -22,25 +22,24 @@ export type FormState = {
     }
 } | undefined;
 
-const MAX_SIZE = 4 * 1024 * 1024;//4 MB
+const MAX_SIZE = 1 * 1024 * 1024;//4 MB
+export const IMAGE_TYPES = ["image/webp", "image/png", "image/jpeg"]
 
 export const ImageSchema = z.instanceof(File, { message: 'فایل معتبر نیست.' })
-                    .refine((file)=> file.size <= MAX_SIZE, { message: 'فایل انتخابی باید کمتر از ۵MB باشد.'})
+                            .refine((file)=> file.size <= MAX_SIZE, { message: 'فایل انتخابی باید کمتر از ۵MB باشد.'})
 
 export const CreatePostFormSchema = z.object({
     category: z.string({ message: 'لطفا دسته بندی خود را انتخاب کنید.' }),
     title: z
     .string({ message: 'لطفا عنوان آگهی خود را وارد کنید.'})
     .min(3, { message: 'عنوان آگهی حداقل باید یک کلمه باشد.'}),
-    desc: z.string(),
+    desc: z.string().optional(),
     image: z
     .instanceof(File,{ message: 'فایل انتخابی باید از نوع png/jpeg باشد.'}),
     price: z
-    .string()
-    .transform((num)=> Number(num))
-    .refine((num)=> !isNaN(num), { message: 'قیمت باید یک عدد معتبر باشد.' })
-    .refine((num)=> num >= 10000, { message: 'قیمت باید بیشتر از ۱۰،۰۰۰ تومان باشد.' }),
-    district: z.string(),
+    .string({ message: 'این فیلد الزامی است.' })
+    .refine((val)=> !isNaN(Number(val)) && Number(val) >= 5000,{ message: 'قیمت باید بیشتر از ۵۰۰۰ تومان باشد.' }),
+    district: z.string().optional(),
 })
 export type CreateFormState = {
     errors?: {
