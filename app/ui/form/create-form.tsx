@@ -1,5 +1,5 @@
 'use client'
-import { useActionState, useEffect, useState, useRef } from "react";
+import { useActionState, useEffect, useReducer, useState, useRef } from "react";
 import { createPost } from "@/app/lib/actions";
 import { QueryResultRow } from "@vercel/postgres";
 import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
@@ -8,20 +8,13 @@ import { ImageSchema, IMAGE_TYPES, CreateFormState, CreatePostFormSchema } from 
 export default function Form(props: {
     categories: QueryResultRow[];
 }){
-    const [state, formAction, isPending] = useActionState(createPost, undefined);
-    const [category, setCategory] = useState({ name: 'select' });
+    const [formState, dispatch] = useReducer(reducer, { category: 'select' });
+    const [submittionState, formAction, isPending] = useActionState(createPost, undefined);
     const hiddenInputRef = useRef(null);
     const [imageFiles, setImageFiles] = useState< File[] >([]);
     const [imageErrors, setImageErrors] = useState< string >();
-    const [formErrors, setFormErrors] = useState< CreatePostErrorState >();
-    console.log('Form Erros State: ', formErrors)
-    
-    useEffect(()=>{
-        if(state) setCategory({ name: state.values.category });
-    },[state])
 
     function handleImageChange(e: React.ChangeEvent<HTMLInputElement>){
-        console.log('working')
         if(e.currentTarget.files && e.currentTarget.files[0] && e.currentTarget.files[0].size) {
             //validate 💡each image before updating the image holder state.
             const validated = ImageSchema.safeParse(e.currentTarget.files[0]);
@@ -50,11 +43,11 @@ export default function Form(props: {
         if(!validated.success){
             const errors = validated.error.flatten().fieldErrors;
             console.log(errors)
-            setFormErrors( errors );
+            dispatch({ type: 'error', errors: errors })
             return;
         }
-        setFormErrors(undefined)
-        //add the image files in the state and submit the form
+        dispatch({ type: 'send' })
+        //add the image files from the state into the formData and submit the form
         
     }
 
@@ -63,32 +56,32 @@ export default function Form(props: {
         <form onSubmit={onSubmit}>
             <label htmlFor="category">دسته‌ی آگهی</label>
                 <select name="category" 
-                        value={ category.name } 
-                        onChange={(e)=> setCategory({ name: e.target.value })} 
+                        value={ formState.category } 
+                        onChange={(e)=> dispatch({ type: 'set-category', category: e.target.value })} 
                         className="text-[white] bg-[#333] p-[0.250rem] block my-[0.650rem] w-full rounded-md"
                         >
                     <option value="select" disabled={true}>انتخاب کنید</option>
                     {props.categories.map((cat) => <option value={cat.value} key={cat.value}>{cat.name}</option>)}
                 </select>
             {
-                category.name != 'select' && 
+                formState.category != 'select' && 
                 <>
             <label htmlFor="title">عنوان آگهی*</label>
             <input 
                 type="text" 
                 name="title" 
-                defaultValue={state?.values.title} 
+                defaultValue={submittionState?.values.title} 
                 className="block my-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" 
                 maxLength={50} 
                 placeholder="فروش آپارتمان در ..."
                 />
-            {formErrors?.title && <div className="text-[red]">{formErrors.title}</div>}
+            {formState.errors?.title && <div className="text-[red]">{formState.errors.title}</div>}
             <label htmlFor="desc">{`توضیحات(اختیاری)`}</label>
             <textarea 
                 name="desc" 
                 cols={5} 
                 rows={5} 
-                defaultValue={state?.values.desc} 
+                defaultValue={submittionState?.values.desc} 
                 className="block my-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full resize-none" 
                 >
             </textarea>
@@ -129,16 +122,16 @@ export default function Form(props: {
             <input 
                 type="number" 
                 name="price" 
-                defaultValue={state?.values.price}
+                defaultValue={submittionState?.values.price}
                 className="block my-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" 
                 placeholder="تومان"
                 />
-            {formErrors?.price && <div className="text-[red]">{formErrors.price}</div>}
+            {formState.errors?.price && <div className="text-[red]">{formState.errors.price}</div>}
             <label htmlFor="district" className="block">محل:</label>
             <input 
                 type="text" 
                 name="district" 
-                defaultValue={state?.values.district} 
+                defaultValue={submittionState?.values.district} 
                 className="block my-[0.650rem] text-[white] bg-[#333] p-[0.250rem] w-full" 
                 placeholder="اقدسیه، مجیدیه، نیاوران، ..."
                 />
@@ -163,4 +156,51 @@ type CreatePostErrorState = {
         desc?: string[],
         price?: string[],
         district?: string[],
+}
+interface ReducerState {
+    category: string,
+    errors?: {
+        category?: string[],
+        title?: string[],
+        desc?: string[],
+        price?: string[],
+        district?: string[],
+        },
+    message?: string,
+} 
+
+type ReducerAction = 
+{ type: 'set-category', category: string } |
+{ type: 'error', errors: CreatePostErrorState, message?: string } |
+{ type: 'send', message?: string } 
+
+function reducer(prevState: ReducerState, action: ReducerAction){
+    switch(action.type){
+
+        case 'set-category':
+            return {
+                ...prevState,
+                category: action.category
+            }
+
+        case 'error':
+            console.log('error dispatch!')
+            return {
+                ...prevState,
+                errors: action.errors,
+                message: action.message,
+            }
+
+
+        case 'send':
+            console.log('send dispatch.')
+            return {
+                ...prevState,
+                errors: undefined,
+                message: action.message,
+            }
+
+        default: 
+            return prevState
+    }
 }
