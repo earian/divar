@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const LoginFormSchema = z.object({
     email: z.string().email({ message: 'لطفا یک ایمیل معتبر وارد کنید.' }),
@@ -22,11 +22,12 @@ export type FormState = {
     }
 } | undefined;
 
+//maximum size of each image to be uplaoded
 const MAX_SIZE = 1 * 1024 * 1024;//4 MB
 export const IMAGE_TYPES = ["image/webp", "image/png", "image/jpeg"]
 
 export const ImageSchema = z.instanceof(File, { message: 'فایل معتبر نیست.' })
-                            .refine((file)=> file.size <= MAX_SIZE, { message: 'فایل انتخابی باید کمتر از ۵MB باشد.'})
+                            .refine((file)=> file.size <= MAX_SIZE, { message: 'فایل انتخابی باید کمتر از ۱MB باشد.'})
 
 export const CreatePostFormSchema = z.object({
     category: z.string({ message: 'لطفا دسته بندی خود را انتخاب کنید.' }),

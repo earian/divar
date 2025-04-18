@@ -1,5 +1,5 @@
 'use client'
-import { useActionState, useEffect, useReducer, useState, useRef } from "react";
+import { useActionState, useTransition, useReducer, useState, useRef } from "react";
 import { createPost } from "@/app/lib/actions";
 import { QueryResultRow } from "@vercel/postgres";
 import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
@@ -9,10 +9,12 @@ export default function Form(props: {
     categories: QueryResultRow[];
 }){
     const [formState, dispatch] = useReducer(reducer, { category: 'select' });
-    const [submittionState, formAction, isPending] = useActionState(createPost, undefined);
+    const [submittionState, formAction] = useActionState(createPost, undefined);
+    const [isPending, startTransition] = useTransition();
     const hiddenInputRef = useRef(null);
     const [imageFiles, setImageFiles] = useState< File[] >([]);
     const [imageErrors, setImageErrors] = useState< string >();
+    console.log('Submittion Message: ', submittionState?.message)
 
     function handleImageChange(e: React.ChangeEvent<HTMLInputElement>){
         if(e.currentTarget.files && e.currentTarget.files[0] && e.currentTarget.files[0].size) {
@@ -48,7 +50,11 @@ export default function Form(props: {
         }
         dispatch({ type: 'send' })
         //add the image files from the state into the formData and submit the form
-        
+        if(imageFiles.length) imageFiles.forEach((file)=> formData.append('images', file));
+        startTransition(()=>{
+            console.log('Form Submitted🧨');
+            formAction(formData);
+        })
     }
 
 

@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import { del, put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { CreateSession, whois } from "./session";
+import { join } from "path";
+import { writeFile } from "fs/promises";
 
 export async function authenticate(state: FormState | null, formData: FormData){
         const validatedFields = LoginFormSchema.safeParse({
@@ -63,37 +65,49 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     }
     
     const {category, title, desc, price, district} = validatedFields.data;
-    const imageFile = formData.get('image') as File;
-    const date = new Date().toISOString().split('T')[0];
-    const id = uuidv4();
-    try{
-        const creatorId = await whois();
-        let blob = null;
-        if(imageFile && imageFile.size !== 0){
-            blob = await put(`posts/${imageFile.name}`, imageFile, {
-                access: 'public',
-              });
-        }
-        let query = `
-        INSERT INTO posts ("postId", title, description, price, category, date, district, creator
-        ${blob ? ', thumbnail' : ''})
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8
-        ${blob ? ', $9' : ''})
-      `;
-    
-      let params = [id, title, desc, price, category, date, district, creatorId];
-      if (blob) {
-        params.push(blob.url);
-      }
-    
-      // Execute query
-      await sql.query(query, params);    
-    }catch(err){
-        console.log(err)
-        throw new Error("Coudn't create the post.")
+    const imageFiles = formData.getAll('images') as File[];
+    console.log('Serverside imageFiles: ', imageFiles)
+    for(const file of imageFiles){
+        console.log('For loop started!')
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const path = join(process.cwd(),'/public', 'poster', file.name);
+        await writeFile(path, buffer);
+        console.log(`Open ${path} to see the uploaded file.`)
     }
-    revalidatePath('/');
-    redirect('/');
+    return { message: 'Post Created Successfuly!🎉',
+             values: validatedFields.data   
+}
+    //const date = new Date().toISOString().split('T')[0];
+    //const id = uuidv4();
+    // try{
+    //     const creatorId = await whois();
+    //     let blob = null;
+    //     if(imageFile && imageFile.size !== 0){
+    //         blob = await put(`posts/${imageFile.name}`, imageFile, {
+    //             access: 'public',
+    //           });
+    //     }
+    //     let query = `
+    //     INSERT INTO posts ("postId", title, description, price, category, date, district, creator
+    //     ${blob ? ', thumbnail' : ''})
+    //     VALUES ($1, $2, $3, $4, $5, $6, $7, $8
+    //     ${blob ? ', $9' : ''})
+    //   `;
+    
+    //   let params = [id, title, desc, price, category, date, district, creatorId];
+    //   if (blob) {
+    //     params.push(blob.url);
+    //   }
+    
+    //   // Execute query
+    //   await sql.query(query, params);    
+    // }catch(err){
+    //     console.log(err)
+    //     throw new Error("Coudn't create the post.")
+    // }
+    // revalidatePath('/');
+    // redirect('/');
 
 }
 
