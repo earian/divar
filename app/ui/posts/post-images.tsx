@@ -19,6 +19,7 @@ export default function Images(props: {
     if(!props.thumbnail) return
 
     return (
+        <>
         <div
         className="relative w-full max-w-lg mx-auto aspect-square overflow-hidden"
         >
@@ -62,7 +63,13 @@ export default function Images(props: {
                     ><ChevronLeftIcon className="size-6 text-black mx-auto" /></button>
                 </>
             }
-            
         </div>
+
+        <div
+        className="w-full"
+        >
+            <div className="w-[fit-content] mx-auto h-full">{galleryArr.map((_, ind)=> <span className={`inline-block size-[0.450rem] rounded-[50%] mx-[0.135rem] ${ind == currentIndex ? 'bg-[gray]' : 'bg-[white]'}`} key={ind}></span>)}</div>
+        </div>
+        </>
     )
 }
