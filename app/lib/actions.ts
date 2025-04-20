@@ -65,7 +65,7 @@ export async function createPost(prevState: CreateFormState, formData: FormData)
     const {category, title, desc, price, district} = validatedFields.data;
     const imageFiles = formData.getAll('images') as File[];
     let gallery : string[] = [];//gallery will be the LINKS of the images, to show later in the posts page
-    const date = new Date().toISOString().split('T')[0];
+    const date = new Date().toISOString();
     const id = uuidv4();
     try{
         const creatorId = await whois();

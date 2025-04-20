@@ -42,7 +42,7 @@ export async function fetchLatestPosts(){
                                 ORDER BY date DESC
                                 LIMIT 5`
 
-        return posts;
+        return posts.rows as [];
     }catch(err){
         console.log(err);
         throw new Error(`Coudn't fetch the data right now.`)

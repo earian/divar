@@ -2,7 +2,7 @@ import Image from "next/image";
 import { rubik } from "../fonts";
 import Link from "next/link";
 
-export default async function PostThumbnail(props: {
+export default function PostThumbnail(props: {
     postId: string;
     title: string;
     price: string;
