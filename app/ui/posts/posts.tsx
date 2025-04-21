@@ -11,16 +11,16 @@ export default function Posts(){
     const containerRef = useRef<HTMLDivElement>(null);
     const sentinelRef = useRef<HTMLDivElement>(null);
     const [lastDate, setLastDate] = useState< string >();
-    console.log('loading State: ', loadingState);
-    console.log('Last Date: ', lastDate)
 
     useEffect(()=>{
+        let ignore = false;
         async function getLatestPosts(){
-            console.log('getLatestPosts fn ran!')
             const res = await fetch(`/api/load-posts/feed/${lastDate && lastDate}`);
             const { data, noMore } = await res.json();
             if(data){
-                setLastDate((val)=> val = data[data.length - 1].date);
+                if(ignore) return; //This is for the cleanup function of the useEffect hook
+                setLastDate(data[data.length - 1].date);
+                //setPosts((prev)=> [...prev, ...data])
                 appendPosts(data);
                 if(noMore) {
                     setLoadingState('no-more')//if there is no more posts left to shown switch the state to 'no-more'
@@ -32,6 +32,7 @@ export default function Posts(){
             }
         }
         if(loadingState == 'initial' || loadingState == 'more') getLatestPosts();
+        return () => { ignore = true }
     },[loadingState])
 
 
