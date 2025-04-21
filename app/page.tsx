@@ -6,8 +6,6 @@ import Header from "./ui/topNav";
 import { unstable_noStore } from "next/cache";
 
 export default function Home() {
-  unstable_noStore();
-
   return (
     <>
       <Header />

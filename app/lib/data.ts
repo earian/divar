@@ -34,13 +34,23 @@ export async function fetchPost(id: string){
     }
 }
 
-export async function fetchLatestPosts(){
+export async function fetchLatestPosts(lastDate?: string){
     try{
-        const posts = await sql`SELECT title, price, district, thumbnail, "postId"
-                                FROM posts
-                                WHERE "isActive" = TRUE
-                                ORDER BY date DESC
-                                LIMIT 5`
+        const posts = lastDate
+        ? await sql`
+            SELECT title, price, district, thumbnail, date, "postId"
+            FROM posts
+            WHERE "isActive" = TRUE AND date < ${lastDate}
+            ORDER BY date DESC
+            LIMIT 5
+          `
+        : await sql`
+            SELECT title, price, district, thumbnail, date, "postId"
+            FROM posts
+            WHERE "isActive" = TRUE
+            ORDER BY date DESC
+            LIMIT 5
+          `;
 
         return posts.rows as [];
     }catch(err){

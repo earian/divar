@@ -3,26 +3,35 @@ import PostThumbnail from "./postThumbnail";
 import { toPersianDigits } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { PostSkeleton } from "../skeletons";
-import { postThumbnail } from "@/app/api/load-posts/feed/route";
+import { postThumbnail } from "@/app/api/load-posts/feed/[slug]/route";
 import { createRoot } from "react-dom/client";
 
 export default function Posts(){
-    const [loadingState, setLoadingState] = useState< 'initial' | 'more' | undefined >('initial');
+    const [loadingState, setLoadingState] = useState< 'initial' | 'more' | 'no-more' | undefined >('initial');
     const containerRef = useRef<HTMLDivElement>(null);
     const sentinelRef = useRef<HTMLDivElement>(null);
     const [lastDate, setLastDate] = useState< string >();
-    console.log('loading state: ', loadingState);
+    console.log('loading State: ', loadingState);
+    console.log('Last Date: ', lastDate)
 
     useEffect(()=>{
         async function getLatestPosts(){
             console.log('getLatestPosts fn ran!')
-            const res = await fetch('/api/load-posts/feed');
-            const data = await res.json();
-
-            appendPosts(data);
-            setLoadingState(undefined);
+            const res = await fetch(`/api/load-posts/feed/${lastDate && lastDate}`);
+            const { data, noMore } = await res.json();
+            if(data){
+                setLastDate((val)=> val = data[data.length - 1].date);
+                appendPosts(data);
+                if(noMore) {
+                    setLoadingState('no-more')//if there is no more posts left to shown switch the state to 'no-more'
+                    return
+                }
+                setLoadingState(undefined);
+            } else if(noMore) {
+                setLoadingState('no-more');
+            }
         }
-        if(loadingState != undefined) getLatestPosts();
+        if(loadingState == 'initial' || loadingState == 'more') getLatestPosts();
     },[loadingState])
 
 
@@ -60,14 +69,9 @@ export default function Posts(){
             ref={containerRef}
             >
             {loadingState === 'initial' && <PostSkeleton />}
-            {/* {posts && posts.map((post, ind)=> {
-                //Making the price a persian digit formatted string
-                const perPrice = toPersianDigits(post.price);
-                return <PostThumbnail postId={post.postId} title={post.title} price={perPrice} district={post.district} thumbnail={post.thumbnail} key={ind}/>
-            })} */}
             </div>
             {loadingState == 'more' && <><PostSkeleton /><PostSkeleton /><PostSkeleton /></>}
-            <div ref={sentinelRef} className="h-[1px] bg-[white]"></div>
+            <div ref={sentinelRef} className="h-[1px]"></div>
         </main>
     )
 }
