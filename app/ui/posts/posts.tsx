@@ -20,7 +20,6 @@ export default function Posts(){
             if(data){
                 if(ignore) return; //This is for the cleanup function of the useEffect hook
                 setLastDate(data[data.length - 1].date);
-                //setPosts((prev)=> [...prev, ...data])
                 appendPosts(data);
                 if(noMore) {
                     setLoadingState('no-more')//if there is no more posts left to shown switch the state to 'no-more'
