@@ -21,7 +21,7 @@ export default async function Page(){
         className="px-[0.235rem]"
         >
             <Suspense fallback={<div>در حال پردازش...</div>}>
-                <Posts posts={posts}/>
+                <Posts userId={userId} posts={posts}/>
             </Suspense>
         </main>
         </>

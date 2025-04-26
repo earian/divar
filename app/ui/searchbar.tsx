@@ -1,6 +1,7 @@
 'use client'
 import { MagnifyingGlassIcon, MapPinIcon } from "@heroicons/react/24/outline";
 import { rubik } from "./fonts";
+import { lockBodyScroll } from "../lib/utils";
 
 export default function Search(props: {
     state: {
@@ -10,7 +11,7 @@ export default function Search(props: {
     placeholder?: string;
 }){
     function handleSearchClick(){
-        document.body.style.overflow = 'hidden';
+        lockBodyScroll();
         props.state.setIsSearching(true)
     }
 
