@@ -3,6 +3,7 @@ import { useEffect, useState, useTransition, useActionState } from "react";
 import Button from "../posts/button";
 import { EmailSchema ,PasswordSchema } from "@/app/lib/definitions";
 import { authenticate } from "@/app/lib/actions";
+import { lockBodyScroll, unlockBodyScroll } from "@/app/lib/utils";
 
 export default function LoginModal(props: {
     showModal: Function,
@@ -18,14 +19,14 @@ export default function LoginModal(props: {
 
     useEffect(()=>{
         const id = setTimeout(()=>{
-            document.body.style.overflow = 'hidden';
+            lockBodyScroll();
             setShowFrom(true);
         },20)
         return ()=> clearTimeout(id)
     },[])
 
     function cancel(){
-        document.body.style.overflow = 'auto';
+        unlockBodyScroll();
         props.showModal(false);
     }
 

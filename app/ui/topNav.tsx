@@ -2,12 +2,13 @@
 import { useState } from 'react';
 import Search from './searchbar';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { unlockBodyScroll } from '../lib/utils';
 
 export default function Header(){
     const [isSearching, setIsSearching] = useState<boolean>(false);
     
     function handleArrowClick(){
-        document.body.style.overflow = 'auto';
+        unlockBodyScroll();
         setIsSearching(false);
     }
 

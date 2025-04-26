@@ -68,7 +68,7 @@ export default function Page(){
             {post.description.length != 0 &&
                 <section className="p-[0.875rem]">
                     <h3 className="block text-[1.4rem] font-bold">توضیحات</h3>
-                    <p>{ post.description }</p>
+                    <p className="whitespace-pre-wrap">{ post.description }</p>
                 </section>
             }
                 <Bottom 
