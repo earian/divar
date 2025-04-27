@@ -10,7 +10,6 @@ export default async function Page(){
     const userId = await whois();
     if(!userId) redirect('/user');
     const posts = fetchPostsByUserId(userId);
-    //'75356cd6-ff11-4c4a-b0f4-471274526c12'
     
 
     return (

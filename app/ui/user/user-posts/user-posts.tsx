@@ -3,6 +3,7 @@ import { use, useReducer, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import Post from "./post-card";
 import { ExclamationTriangleIcon, FireIcon } from "@heroicons/react/24/outline";
+import AddPost from "./add-post-redirection";
 
 export default function Posts(props: {
     userId: string,
@@ -10,8 +11,16 @@ export default function Posts(props: {
 }){
     const initialPosts = use(props.posts);
     const [posts, dispatch] = useReducer(reducer, initialPosts);
-    const [lastDate, setLastDate] = useState(initialPosts[initialPosts.length - 1].date);
-    const [noMore, setNoMore] = useState< boolean >(false);
+    const [lastDate, setLastDate] = useState(()=> {
+        if(initialPosts.length) return initialPosts[initialPosts.length - 1].date;
+        return null;
+    });
+    const [noMore, setNoMore] = useState< boolean >(()=>{
+        if(lastDate == null) return true;
+        return false;
+    });
+
+    console.log(lastDate)
 
     async function handleLoadMore(){
         const body = { userId: props.userId, lastDate: lastDate }
@@ -55,6 +64,7 @@ export default function Posts(props: {
                         >ادامه
                         </button> 
         }
+        { (posts.length == 0 && noMore) && <AddPost /> }
         </>
 
     )

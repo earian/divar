@@ -125,13 +125,13 @@ export async function deletePostById(id: string | null){
     try{
         const data = await sql`SELECT thumbnail, gallery FROM posts WHERE "postId" = ${id}`
         const { thumbnail, gallery } = data.rows[0];
-        imgLinks.push(thumbnail);
+        if(thumbnail) imgLinks.push(thumbnail);
         const galleryArr = JSON.parse(gallery);
         if(galleryArr) imgLinks.push(...galleryArr);
 
         //deleting the row and looping through the image sources and deleting them from the blob storage
         await sql`DELETE FROM posts WHERE "postId" = ${id}`;
-        if(imgLinks) {
+        if(imgLinks && imgLinks.length) {
             for(const link of imgLinks){
                 await del(link);
             }
